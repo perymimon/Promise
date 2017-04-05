@@ -8,10 +8,26 @@
         <link rel="stylesheet" href="jasmine.css">
         <script src="Promise.js"></script>
         <script>
-            describe('Promise', function () {
-                it('created',function (next) {
-                    expect(12).toBe(10)
+            describe('Promise =>', function () {
+                var p = null;
+                it('created',function() {
+                    p = new _Promise(function (res, rej) {
+                        setTimeout(function () {
+                            res('some nice value')
+                        },2000)
+                    });
+                    expect(p).toExist();
+                });
+                describe('succeses way =>',function () {
+                    it('resoleved')
+                    it('not rejected')
+                    it('then is resolved')
                 })
+                describe('faild way =>',function () {
+                    it('rejected')
+                    it('not resoleved')
+                })
+
             })
         </script>
 
