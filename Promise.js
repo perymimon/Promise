@@ -67,11 +67,15 @@ function _Promise(cb) {
 _Promise.all = function(iterable){
     return new _Promise(function (res, rej) {
         var ret = [];
-        iterable.forEach(function (promise) {
-            promise.then(function (value) {
-                ret.push(value);
-
-            })
+        var count = 0;
+        function ceckout(index,value){
+            ret[index] = value;
+            count ++;
+            if(count == iterable.length)
+                res(ret)
+        }
+        iterable.forEach(function (promise,i) {
+            promise.then(ceckout.bind({},i))
         })
     })
 };

@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <script src="sinon.js"></script>
         <script src="jasmine.js"></script>
         <script src="jasmine-html.js"></script>
         <script src="jasmine-boot.js"></script>
@@ -13,42 +14,57 @@
                 var p = null;
                 var testValue = 'some nice value';
                 var resolveHandler = null;
+                var rejectHandler = null;
+                var spy = null;
 
+                beforeAll(function () {
+
+                });
                 it('created',function() {
                     p = new _Promise(function (res, rej) {
                         resolveHandler = res;
                     });
 //                    expect(p).toExist();
                 });
+                describe('register "then" ',function () {
+                    beforeAll(function () {
+                        spy = sinon.spy();
+                    });
+                    it('shoud not invoked before resoleve',function () {
+                        p.then(spy);
+                        expect(spy.notCalled).toBeTruthy();
 
-                it('register "then" wiout call back ',function () {
-                    p.then(function (value) {
-                        expect
                     })
-                })
+                    it('should invoke after resolve',function () {
+                        resolveHandler(testValue);
+                        expect(spy.calledOnce).toBeTruthy();
+                        expect(spy.calledWith(testValue)).toBeTruthy();
+                    })
 
-                describe('succeses way =>',function () {
-                    it('resoleved',function (next) {
-                        p.then(function (value) {
-                            log();
-                            next();
-                        })
+                });
+                describe('register "then" again =>',function () {
+                    beforeAll(function () {
+                        spy = sinon.spy();
                     });
-                    it('resolved with value',function () {
-                        p.then(function (value) {
-                            expect(value).toBe(testValue)
-                        })
+                    it('shoud invoked imidiatly',function () {
+                        p.then(spy);
+                        expect(spy.calledOnce).toBeTruthy();
+                        expect(spy.calledWith(testValue)).toBeTruthy();
                     });
-                    it('not rejected')
-                    it('then is resolved')
-                })
-                describe('faild way =>',function () {
-                    it('rejected')
-                    it('not resoleved')
-                })
+                    it('should not invoke again after another resolve',function () {
+                        resolveHandler(testValue);
+                        expect(spy.calledOnce).toBeTruthy();
+
+                    })
+
+                });
+
+
+
 
             })
         </script>
+
 
     </head>
 <body>
