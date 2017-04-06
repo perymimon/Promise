@@ -2,7 +2,12 @@
  * Created by pery on 02/04/2017.
  */
 function _Promise(cb) {
-    var _status = 'pending';
+    var  PENDING = 'pending',
+        REJECT = 'reject',
+        RESOLVE = 'resolve';
+    ;
+
+    var _status = PENDING;
     var _value = null;
     var _error = null;
     if (cb instanceof Function){
@@ -16,12 +21,12 @@ function _Promise(cb) {
     }
 
     function resolve(value){
-        _status = 'resolve';
+        _status = RESOLVE;
         _value = value;
         resolving();
     }
     function reject(err) {
-        _status = 'reject';
+        _status = REJECT;
         _error = new Error(err);
 
     }
@@ -29,7 +34,7 @@ function _Promise(cb) {
     var _rejectQ = [];
 
     function resolving() {
-        if(_status == 'resolve'){
+        if(_status == RESOLVE){
             for(var i=0, res; res = _resolveQ[i]; i++ ){
                 res(_value);
             }
