@@ -71,8 +71,11 @@
                 this.then(null, onRejected);
             },
             then:function (onFulfilled, onRejected) {
+                var me = this;
+                var ret = null;
                 return  new _Promise(function (res, rej) {
                     _resolving();
+
 
                     onFulfilled = (onFulfilled instanceof Function)?
                         onFulfilled: identity;
@@ -81,7 +84,10 @@
 
                     _resolveQ.push(function (value) {
                         try {
-                            res(onFulfilled(value));
+                            ret = onFulfilled(value);
+                            if (ret === me)
+                                throw  TypeError('return current(this) promise are forbidden');
+                            res(ret);
                         } catch (err) {
                             rej(err);
                         }
