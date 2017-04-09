@@ -88,7 +88,12 @@
                     });
 
                     _rejectQ.push(function (reason) {
-                        rej(onRejected(reason))
+                        try {
+                            rej(onRejected(reason))
+                        } catch (err) {
+                            rej(err);
+                        }
+
                     })
 
                 });
