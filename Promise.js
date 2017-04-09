@@ -8,12 +8,12 @@
     function identity (x){return x;}
     function noop (x){}
 
-    function _Promise(cb) {
-        var  PENDING = 'pending',
-            REJECT = 'reject',
-            RESOLVE = 'resolve';
-        ;
+    var PENDING = ['pending'],
+        REJECT = ['reject'],
+        RESOLVE = ['resolve'];
+    ;
 
+    function _Promise(cb) {
         var _status = PENDING;
         var _value = null;
         var _error = null;
@@ -45,6 +45,7 @@
         var _resolveQ = [];
         var _rejectQ = [];
 
+
         function resolving() {
             if (_status == RESOLVE) {
                 setTimeout(function () {
@@ -74,12 +75,12 @@
             get value () {
                 return _value
             },
+            catch: function (onRejected) {
+                this.then(null, onRejected);
+            },
             then:function (onFulfilled, onRejected) {
-                // if(onFulfilled instanceof promise){
-                //     return onFulfilled;
-                // }
                 resolving();
-
+                rejecting();
                 return  new _Promise(function (res, rej) {
 
                     onFulfilled = (onFulfilled instanceof Function)?
@@ -87,42 +88,20 @@
                     onRejected = (onRejected instanceof Function)?
                         onRejected: identity;
 
-                    res = ;
-                    rej = onFulfilled.then? onFulfilled.then :rej;
-                    try{
-                        _resolveQ.push(function (value) {
-                            onFulfilled.then?
-                                onFulfilled.then(res):
-                                res(onFulfilled(value))
-                        });
+                    _resolveQ.push(function (value) {
+                        // onFulfilled.then?
+                        //     onFulfilled.then(res):
+                        res(onFulfilled(value))
+                    });
 
-                        _rejectQ.push(function (reason) {
+                    _rejectQ.push(function (reason) {
+                        // onFulfilled.then?
+                        //     onFulfilled.then(null,rej):
                             rej(onRejected(reason))
-                        })
-                    } catch (err){
-                        rej(err);
-                    }
+                    })
 
                 });
 
-            },
-            catch:function (onRejected) {
-                rejecting();
-                return new _Promise(function (res, rej) {
-
-                    onRejected = (onRejected instanceof Function)?
-                        onRejected: identity;
-
-                    try {
-                        _rejectQ.push(function (reason) {
-                            rej(onRejected(reason))
-                        })
-                    }catch (err){
-                        rej(err);
-                    }
-
-
-                });
             }
         };
 
@@ -140,7 +119,7 @@
                     res(ret)
             }
             iterable.forEach(function (promise,i) {
-                promise.then(ceckout.bind({},i))
+                promise.then(ceckout.bind(null, i))
             })
         })
     };
