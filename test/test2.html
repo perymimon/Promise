@@ -64,18 +64,24 @@
             it("multiple fulfillment handlers, one of which throws", function (done) {
                 let stub = sinon.stub().throws(),
                     spy1 = sinon.spy(),
-                    spy2 = sinon.spy();
+                    spy2 = sinon.spy(),
+                    spy3 = sinon.spy(),
+                    spyError = sinon.spy();
 
                 let promise = new _Promise(catchHandler);
-                promise.then(null, spy1);
-                promise.then(null, spy2);
-                promise.then(null, stub);
+                promise.then(spy1, null);
+                promise.then(stub, null).then(spy2, spyError);
+                promise.then(spy3, spyError);
 
-                rejected(value);
+                resolver(value);
 
                 expect(stub.notCalled).toBeTruthy();
                 setTimeout(function () {
+                    expect(spy1.calledOnce).toBeTruthy();
                     expect(stub.calledOnce).toBeTruthy();
+                    expect(spy2.notCalled).toBeTruthy();
+                    expect(spy3.calledOnce).toBeTruthy();
+                    expect(spyError.calledOnce).toBeTruthy();
 //                expect(stub.calledWith(value)).toBeTruthy();
                     done();
                 }, 100);

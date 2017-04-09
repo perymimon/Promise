@@ -52,12 +52,7 @@
         function resolving(queue, v) {
             setTimeout(function () {
                 for (var i = 0, res; res = queue[i]; i++) {
-                    try {
                         res(v);
-                    } catch (err) {
-                        res(err);
-                    }
-
                 }
                 _rejectQ.length = 0;
                 /*empty the que */
@@ -85,7 +80,11 @@
                         onRejected: identity;
 
                     _resolveQ.push(function (value) {
-                        res(onFulfilled(value))
+                        try {
+                            res(onFulfilled(value));
+                        } catch (err) {
+                            rej(err);
+                        }
                     });
 
                     _rejectQ.push(function (reason) {
