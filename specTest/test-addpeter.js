@@ -7,7 +7,7 @@
     window.rejected = rejected;
     window.resolved = resolved;
     window.deferred = deferred;
-    var _Promise = window._Promise || require('./Promise')._Promise;
+    var _Promise = window._Promise || require('./../Promise')._Promise;
 
     function resolved(value) {
         return _Promise.resolve(value);

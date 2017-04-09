@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <script src="sinon.js"></script>
+        <script src="jasmine.js"></script>
+        <script src="jasmine-html.js"></script>
+        <script src="jasmine-boot.js"></script>
+        <link rel="stylesheet" href="jasmine.css">
+        <script src="../Promise.js"></script>
+        <script>
+            const value = 'string';
+            let stub = new sinon.stub().returns(value);
+            let resolver = null;
+            let rejected = null;
+            var PENDING = ['pending'],
+                REJECT = ['reject'],
+                RESOLVE = ['resolve'];
+
+            function catchHandler(res,rej){
+                resolver = res;
+                rejected = rej;
+            }
+
+
+            it('should work', function (done) {
+                let stub = new sinon.stub().returns(value);
+                let promise = new _Promise(catchHandler);
+            promise
+                .then(stub)
+                .then(stub);
+
+                expect(stub.notCalled).toBeTruthy();
+
+            resolver();
+
+                expect(stub.notCalled).toBeTruthy();
+                setTimeout(function () {
+                    expect(stub.calledTwice).toBeTruthy();
+                    expect(stub.calledWith(value)).toBeTruthy();
+                    done();
+                }, 100);
+
+            });
+
+            it("must be called after `promise` is rejected, with `promise`’s rejection reason as its first argument.", function (done) {
+                let stub = new sinon.stub().returns(value);
+                let promise = new _Promise(catchHandler);
+                promise
+                    .then(null, stub);
+
+                expect(stub.notCalled).toBeTruthy();
+
+                rejected(value);
+
+                expect(stub.notCalled).toBeTruthy();
+                setTimeout(function () {
+                    expect(stub.calledOnce).toBeTruthy();
+//                expect(stub.calledWith(value)).toBeTruthy();
+                    done();
+                }, 100);
+
+            });
+            it("multiple fulfillment handlers, one of which throws", function (done) {
+                let stub = sinon.stub().throws(),
+                    spy1 = sinon.spy(),
+                    spy2 = sinon.spy();
+
+                let promise = new _Promise(catchHandler);
+                promise.then(null, spy1);
+                promise.then(null, spy2);
+                promise.then(null, stub);
+
+                rejected(value);
+
+                expect(stub.notCalled).toBeTruthy();
+                setTimeout(function () {
+                    expect(stub.calledOnce).toBeTruthy();
+//                expect(stub.calledWith(value)).toBeTruthy();
+                    done();
+                }, 100);
+
+            });
+
+        </script>
+
+
+    </head>
+<body>
+
+</body>
+</html>

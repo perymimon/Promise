@@ -11,12 +11,16 @@
     var PENDING = ['pending'],
         REJECT = ['reject'],
         RESOLVE = ['resolve'];
-    ;
 
     function _Promise(cb) {
         var _status = PENDING;
         var _value = null;
-        var _error = null;
+        var _reason = null;
+
+        var _resolveQ = [];
+        var _rejectQ = [];
+        var _resolving = noop;
+
         if (cb instanceof Function){
             try {
                 cb(resolve, reject);
@@ -28,49 +32,42 @@
         }
 
         function resolve(value){
-            if(_status == PENDING ){
+            if (_status === PENDING) {
                 _status = RESOLVE;
                 _value = value;
-                    resolving();
+                (_resolving = resolving.bind(null, _resolveQ, value))();
+
             }
         }
-        function reject(err) {
-            if(_status == PENDING ) {
+
+        function reject(reason) {
+            if (_status === PENDING) {
                 _status = REJECT;
-                _error = new Error(err);
-                rejecting();
+                _reason = reason;
+                _resolving = resolving.bind(null, _rejectQ, _reason);
+                _resolving();
             }
         }
 
-        var _resolveQ = [];
-        var _rejectQ = [];
-
-
-        function resolving() {
-            if (_status == RESOLVE) {
-                setTimeout(function () {
-                    for (var i = 0, res; res = _resolveQ[i]; i++) {
-                        res(_value);
+        function resolving(queue, v) {
+            setTimeout(function () {
+                for (var i = 0, res; res = queue[i]; i++) {
+                    try {
+                        res(v);
+                    } catch (err) {
+                        res(err);
                     }
-                    _resolveQ.length = 0;
-                },0);
-            }
-        }
 
-        function rejecting(reason) {
-            if(_status == REJECT){
-                setTimeout(function () {
-                    for (var i = 0, rej; rej = _resolveQ[i]; i++) {
-                        rej(reason);
-                    }
-                    _rejectQ.length = 0;
-                },0);
-            }
+                }
+                _rejectQ.length = 0;
+                /*empty the que */
+                _resolveQ.length = 0;
+            }, 0);
         }
 
         var promise = {
             get status () {
-                return _status;
+                return _status[0];
             },
             get value () {
                 return _value
@@ -79,9 +76,8 @@
                 this.then(null, onRejected);
             },
             then:function (onFulfilled, onRejected) {
-                resolving();
-                rejecting();
                 return  new _Promise(function (res, rej) {
+                    _resolving();
 
                     onFulfilled = (onFulfilled instanceof Function)?
                         onFulfilled: identity;
@@ -89,19 +85,14 @@
                         onRejected: identity;
 
                     _resolveQ.push(function (value) {
-                        // onFulfilled.then?
-                        //     onFulfilled.then(res):
                         res(onFulfilled(value))
                     });
 
                     _rejectQ.push(function (reason) {
-                        // onFulfilled.then?
-                        //     onFulfilled.then(null,rej):
-                            rej(onRejected(reason))
+                        rej(onRejected(reason))
                     })
 
                 });
-
             }
         };
 
@@ -119,7 +110,7 @@
                     res(ret)
             }
             iterable.forEach(function (promise,i) {
-                promise.then(ceckout.bind(null, i))
+                promise.then(ceckout.bind(null, i), rej)
             })
         })
     };
@@ -127,15 +118,15 @@
     _Promise.race = function (iterable) {
         return new _Promise(function (res, rej) {
             iterable.forEach(function (promise) {
-                promise.then(res,reg)
+                promise.then(res, rej)
             })
         });
 
     };
 
-    _Promise.reject = function(reasone){
+    _Promise.reject = function (reason) {
         return new _Promise(function (res, rej) {
-            rej(reasone)
+            rej(reason)
         })
     };
     _Promise.resolve = function(value){

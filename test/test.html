@@ -7,17 +7,17 @@
         <script src="jasmine-html.js"></script>
         <script src="jasmine-boot.js"></script>
         <link rel="stylesheet" href="jasmine.css">
-        <script src="Promise.js"></script>
-        <script src="test-addpeter.js"></script>
+        <script src="../Promise.js"></script>
+        <script src="../specTest/test-addpeter.js"></script>
         <script>
             log = console.log.bind(console,'logged');
 
-            const PENDING = 'pending',
-                REJECT = 'reject',
-                RESOLVE = 'resolve';
-            ;
+            const PENDING = ['pending'],
+                REJECT = ['reject'],
+                RESOLVE = ['resolve'];
+
             let p = null;
-            const testValue = 'some nice value';
+            const testValue = 'string';
             let resolveHandler = null;
             let rejectHandler = null;
             let spy = null;
