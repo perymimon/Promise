@@ -21,15 +21,40 @@
         var _rejectQ = [];
         var _resolving = noop;
 
-        if (cb instanceof Function){
+        var promise = {
+            get status() {
+                return _status[0];
+            },
+            get value() {
+                return _value
+            },
+            catch: function (onRejected) {
+                return this.then(null, onRejected);
+            },
+            then: function (onFulfilled, onRejected) {
+                return new _Promise(function (res, rej) {
+                    _resolving();
+
+                    _resolveQ.push(resolveEdge.call(this, res, onFulfilled, rej));
+                    _rejectQ.push(resolveEdge.call(this, rej, onRejected, rej));
+
+                });
+            }
+        };
+
+        var me = Object.create(promise);
+
+        if (cb instanceof Function) {
             try {
-                cb(resolve, reject);
-            } catch (err) { 
+                cb.call(me, resolve, reject);
+            } catch (err) {
                 reject(err);
             }
         }else{
             resolve(cb/*value*/);
         }
+
+        return me;
 
         function resolve(value){
             if (_status === PENDING) {
@@ -62,13 +87,13 @@
 
         function resolveEdge(done, on, onFail) {
             var me = this;
+            on = (on instanceof Function) ? on : identity;
             return function (value) {
                 try {
                     var ret = on(value);
-                    if (ret == me)
-                        throw TypeError('return current(this) promise are forbidden');
+                    if (ret == me) throw TypeError('return current(this) promise are forbidden');
                     if (ret instanceof Object && ret.then) {
-                        ret.then(done)
+                        ret.then(done, onFail)
                     } else {
                         done(ret);
                     }
@@ -79,33 +104,7 @@
         }
 
 
-        var promise = {
-            get status () {
-                return _status[0];
-            },
-            get value () {
-                return _value
-            },
-            catch: function (onRejected) {
-                return this.then(null, onRejected);
-            },
-            then:function (onFulfilled, onRejected) {
-                return  new _Promise(function (res, rej) {
-                    _resolving();
 
-                    onFulfilled = (onFulfilled instanceof Function)?
-                        onFulfilled: identity;
-                    onRejected = (onRejected instanceof Function)?
-                        onRejected: identity;
-
-                    _resolveQ.push(resolveEdge.call(this, res, onFulfilled, rej));
-                    _resolveQ.push(resolveEdge.call(this, rej, onRejected, rej));
-
-                });
-            }
-        };
-
-        return Object.create(promise);
     }
 
     _Promise.all = function(iterable){
