@@ -36,7 +36,7 @@
                     _resolving();
 
                     _resolveQ.push(resolveEdge.call(this, res, onFulfilled, rej));
-                    _rejectQ.push(resolveEdge.call(this, rej, onRejected, rej));
+                    _rejectQ.push(resolveEdge.call(this, res, onRejected, rej));
 
                 });
             }
