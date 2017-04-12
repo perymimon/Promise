@@ -60,6 +60,25 @@
             }, 0);
         }
 
+        function resolveEdge(done, on, onFail) {
+            var me = this;
+            return function (value) {
+                try {
+                    var ret = on(value);
+                    if (ret == me)
+                        throw TypeError('return current(this) promise are forbidden');
+                    if (ret instanceof Object && ret.then) {
+                        ret.then(done)
+                    } else {
+                        done(ret);
+                    }
+                } catch (err) {
+                    onFail(err);
+                }
+            }
+        }
+
+
         var promise = {
             get status () {
                 return _status[0];
@@ -68,35 +87,19 @@
                 return _value
             },
             catch: function (onRejected) {
-                this.then(null, onRejected);
+                return this.then(null, onRejected);
             },
             then:function (onFulfilled, onRejected) {
-                var me = this;
                 return  new _Promise(function (res, rej) {
                     _resolving();
 
-                    // throw  TypeError('return current(this) promise are forbidden');
                     onFulfilled = (onFulfilled instanceof Function)?
                         onFulfilled: identity;
                     onRejected = (onRejected instanceof Function)?
                         onRejected: identity;
 
-                    _resolveQ.push(function (value) {
-                        try {
-                            res(onFulfilled(value));
-                        } catch (err) {
-                            rej(err);
-                        }
-                    });
-
-                    _rejectQ.push(function (reason) {
-                        try {
-                            rej(onRejected(reason))
-                        } catch (err) {
-                            rej(err);
-                        }
-
-                    })
+                    _resolveQ.push(resolveEdge.call(this, res, onFulfilled, rej));
+                    _resolveQ.push(resolveEdge.call(this, rej, onRejected, rej));
 
                 });
             }
