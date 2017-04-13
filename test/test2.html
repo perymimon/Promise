@@ -27,14 +27,22 @@
                     spyError = sinon.spy();
 
                 rejected(dummy)
-                    .then(function (d) {
-                        console.log('soccess', 1);
+                    .then(null, function () {
+                        return resolved(123).then(function (value) {
+                            console.log('deep1', value);
+                            return rejected(value);
+                        })
+                    })
+                    .then(function (value) {
+                        console.log('deep2 soc', value);
+
                     }, null)
-                    .then(function (d) {
-                        console.log('soccess', 2);
-                    }, function (d) {
-                        console.log('fail 2', d);
-                    });
+                    .then(noop, function (value) {
+                        console.log('deep3 fail', value);
+                    })
+
+
+
 
             });
 

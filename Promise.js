@@ -51,6 +51,29 @@
             }
         };
 
+        function pushState(done) {
+            return function (value) {
+                done(value);
+            };
+        }
+
+        function resolveEdge(done, on, onFail) {
+            var me = this;
+            return function (value) {
+                try {
+                    var ret = on(value);
+                    if (ret == me) throw TypeError('return current(this) promise are forbidden');
+                    if (ret === Object(ret) && ret.then instanceof Function) {
+                        ret.then(done, onFail)
+                    } else {
+                        done(ret);
+                    }
+                } catch (err) {
+                    onFail(err);
+                }
+            }
+        }
+
         var me = Object.create(promise);
 
         if (cb instanceof Function) {
@@ -94,28 +117,7 @@
             }, 0);
         }
 
-        function pushState(done) {
-            return function (value) {
-                done(value);
-            };
-        }
 
-        function resolveEdge(done, on, onFail) {
-            var me = this;
-            return function (value) {
-                try {
-                    var ret = on(value);
-                    if (ret == me) throw TypeError('return current(this) promise are forbidden');
-                    if (ret instanceof Object && ret.then) {
-                        ret.then(done, onFail)
-                    } else {
-                        done(ret);
-                    }
-                } catch (err) {
-                    onFail(err);
-                }
-            }
-        }
 
 
 
