@@ -35,8 +35,17 @@
                 return new _Promise(function (res, rej) {
                     _resolving();
 
-                    _resolveQ.push(resolveEdge.call(this, res, onFulfilled, rej));
-                    _rejectQ.push(resolveEdge.call(this, res, onRejected, rej));
+                    if (onFulfilled instanceof Function)
+                        _resolveQ.push(
+                            resolveEdge.call(this, res, onFulfilled, rej)
+                        );
+                    else
+                        _resolveQ.push(pushState(res));
+
+                    if (onRejected instanceof Function)
+                        _rejectQ.push(resolveEdge.call(this, res, onRejected, rej));
+                    else
+                        _rejectQ.push(pushState(rej));
 
                 });
             }
@@ -85,9 +94,14 @@
             }, 0);
         }
 
+        function pushState(done) {
+            return function (value) {
+                done(value);
+            };
+        }
+
         function resolveEdge(done, on, onFail) {
             var me = this;
-            on = (on instanceof Function) ? on : identity;
             return function (value) {
                 try {
                     var ret = on(value);
