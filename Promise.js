@@ -37,44 +37,48 @@
 
                     if (onFulfilled instanceof Function)
                         _resolveQ.push(
-                            resolveEdge.call(this, res, onFulfilled, rej)
+                            then.call(this, res, onFulfilled, rej)
                         );
                     else
-                        _resolveQ.push(pushState(res));
+                        _resolveQ.push(adoptState(res));
 
                     if (onRejected instanceof Function)
-                        _rejectQ.push(resolveEdge.call(this, res, onRejected, rej));
+                        _rejectQ.push(then.call(this, res, onRejected, rej));
                     else
-                        _rejectQ.push(pushState(rej));
+                        _rejectQ.push(adoptState(rej));
 
                 });
             }
         };
 
-        function pushState(done) {
-            return function (value) {
-                done(value);
-            };
-        }
-
-        function resolveEdge(done, on, onFail) {
+        function then(done, on, onFail) {
             var me = this;
-            return function (value) {
+             function resolution(x) {
                 try {
-                    var ret = on(value);
-                    if (ret == me) throw TypeError('return current(this) promise are forbidden');
-                    if (ret === Object(ret) && ret.then instanceof Function) {
-                        ret.then(done, onFail)
-                    } else {
-                        done(ret);
+                    if (x == me) throw TypeError('return current(this) promise are forbidden');
+
+                    if (x === Object(x) && x.then instanceof Function) {
+                        return x.then(resolution, resolution);
                     }
+                    done(x);
+
                 } catch (err) {
                     onFail(err);
                 }
             }
+         return  function (value){
+             try {
+               return resolution(on(value));
+             } catch (err) {
+                 onFail(err);
+             }
+         }
+
+
         }
 
         var me = Object.create(promise);
+
 
         if (cb instanceof Function) {
             try {
@@ -87,6 +91,12 @@
         }
 
         return me;
+
+        function adoptState(done) {
+            return function (value) {
+                done(value);
+            };
+        }
 
         function resolve(value){
             if (_status === PENDING) {
@@ -134,7 +144,6 @@
                     res(ret)
             }
             iterable.forEach(function (promise,i) {
-                promise.then(ceckout.bind(null, i), rej)
             })
         })
     };

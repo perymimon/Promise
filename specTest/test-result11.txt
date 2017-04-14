@@ -1,1425 +1,2298 @@
 
 
   2.1.2.1: When fulfilled, a promise: must not transition to any other state.
-    √ already-fulfilled
-    √ immediately-fulfilled
-    √ eventually-fulfilled
-    √ trying to fulfill then immediately reject
-    √ trying to fulfill then reject, delayed
-    √ trying to fulfill immediately then reject delayed
+
+    √ already-fulfilled
+
+    √ immediately-fulfilled
+
+    √ eventually-fulfilled
+
+    √ trying to fulfill then immediately reject
+
+    √ trying to fulfill then reject, delayed
+
+    √ trying to fulfill immediately then reject delayed
 
   2.1.3.1: When rejected, a promise: must not transition to any other state.
-    √ already-rejected
-    √ immediately-rejected
-    √ eventually-rejected
-    √ trying to reject then immediately fulfill
-    √ trying to reject then fulfill, delayed
-    √ trying to reject immediately then fulfill delayed
+
+    √ already-rejected
+
+    √ immediately-rejected
+
+    √ eventually-rejected
+
+    √ trying to reject then immediately fulfill
+
+    √ trying to reject then fulfill, delayed
+
+    √ trying to reject immediately then fulfill delayed
 
   2.2.1: Both `onFulfilled` and `onRejected` are optional arguments.
     2.2.1.1: If `onFulfilled` is not a function, it must be ignored.
       applied to a directly-rejected promise
-        √ `onFulfilled` is `undefined`
-        √ `onFulfilled` is `null`
-        √ `onFulfilled` is `false`
-        √ `onFulfilled` is `5`
-        √ `onFulfilled` is an object
+
+        √ `onFulfilled` is `undefined`
+
+        √ `onFulfilled` is `null`
+
+        √ `onFulfilled` is `false`
+
+        √ `onFulfilled` is `5`
+
+        √ `onFulfilled` is an object
       applied to a promise rejected and then chained off of
-        √ `onFulfilled` is `undefined`
-        √ `onFulfilled` is `null`
-        √ `onFulfilled` is `false`
-        √ `onFulfilled` is `5`
-        √ `onFulfilled` is an object
+
+        √ `onFulfilled` is `undefined`
+
+        √ `onFulfilled` is `null`
+
+        √ `onFulfilled` is `false`
+
+        √ `onFulfilled` is `5`
+
+        √ `onFulfilled` is an object
     2.2.1.2: If `onRejected` is not a function, it must be ignored.
       applied to a directly-fulfilled promise
-        √ `onRejected` is `undefined`
-        √ `onRejected` is `null`
-        √ `onRejected` is `false`
-        √ `onRejected` is `5`
-        √ `onRejected` is an object
+
+        √ `onRejected` is `undefined`
+
+        √ `onRejected` is `null`
+
+        √ `onRejected` is `false`
+
+        √ `onRejected` is `5`
+
+        √ `onRejected` is an object
       applied to a promise fulfilled and then chained off of
-        √ `onFulfilled` is `undefined`
-        √ `onFulfilled` is `null`
-        √ `onFulfilled` is `false`
-        √ `onFulfilled` is `5`
-        √ `onFulfilled` is an object
+
+        √ `onFulfilled` is `undefined`
+
+        √ `onFulfilled` is `null`
+
+        √ `onFulfilled` is `false`
+
+        √ `onFulfilled` is `5`
+
+        √ `onFulfilled` is an object
 
   2.2.2: If `onFulfilled` is a function,
     2.2.2.1: it must be called after `promise` is fulfilled, with `promise`’s fulfillment value as its first argument.
-      √ already-fulfilled
-      √ immediately-fulfilled
-      √ eventually-fulfilled
+
+      √ already-fulfilled
+
+      √ immediately-fulfilled
+
+      √ eventually-fulfilled
     2.2.2.2: it must not be called before `promise` is fulfilled
-      √ fulfilled after a delay
-      √ never fulfilled
+
+      √ fulfilled after a delay
+
+      √ never fulfilled
     2.2.2.3: it must not be called more than once.
-      √ already-fulfilled
-      √ trying to fulfill a pending promise more than once, immediately
-      √ trying to fulfill a pending promise more than once, delayed
-      √ trying to fulfill a pending promise more than once, immediately then delayed
-      √ when multiple `then` calls are made, spaced apart in time
-      √ when `then` is interleaved with fulfillment
+
+      √ already-fulfilled
+
+      √ trying to fulfill a pending promise more than once, immediately
+
+      √ trying to fulfill a pending promise more than once, delayed
+
+      √ trying to fulfill a pending promise more than once, immediately then delayed
+
+      √ when multiple `then` calls are made, spaced apart in time
+
+      √ when `then` is interleaved with fulfillment
 
   2.2.3: If `onRejected` is a function,
     2.2.3.1: it must be called after `promise` is rejected, with `promise`’s rejection reason as its first argument.
-      √ already-rejected
-      √ immediately-rejected
-      √ eventually-rejected
+
+      √ already-rejected
+
+      √ immediately-rejected
+
+      √ eventually-rejected
     2.2.3.2: it must not be called before `promise` is rejected
-      √ rejected after a delay
-      √ never rejected
+
+      √ rejected after a delay
+
+      √ never rejected
     2.2.3.3: it must not be called more than once.
-      √ already-rejected
-      √ trying to reject a pending promise more than once, immediately
-      √ trying to reject a pending promise more than once, delayed
-      √ trying to reject a pending promise more than once, immediately then delayed
-      √ when multiple `then` calls are made, spaced apart in time
-      √ when `then` is interleaved with rejection
+
+      √ already-rejected
+
+      √ trying to reject a pending promise more than once, immediately
+
+      √ trying to reject a pending promise more than once, delayed
+
+      √ trying to reject a pending promise more than once, immediately then delayed
+
+      √ when multiple `then` calls are made, spaced apart in time
+
+      √ when `then` is interleaved with rejection
 
   2.2.4: `onFulfilled` or `onRejected` must not be called until the execution context stack contains only platform code.
     `then` returns before the promise becomes fulfilled or rejected
-      √ already-fulfilled
-      √ immediately-fulfilled
-      √ eventually-fulfilled
-      √ already-rejected
-      √ immediately-rejected
-      √ eventually-rejected
+
+      √ already-fulfilled
+
+      √ immediately-fulfilled
+
+      √ eventually-fulfilled
+
+      √ already-rejected
+
+      √ immediately-rejected
+
+      √ eventually-rejected
     Clean-stack execution ordering tests (fulfillment case)
-      √ when `onFulfilled` is added immediately before the promise is fulfilled
-      √ when `onFulfilled` is added immediately after the promise is fulfilled
-      √ when one `onFulfilled` is added inside another `onFulfilled`
-      √ when `onFulfilled` is added inside an `onRejected`
-      √ when the promise is fulfilled asynchronously
+
+      √ when `onFulfilled` is added immediately before the promise is fulfilled
+
+      √ when `onFulfilled` is added immediately after the promise is fulfilled
+
+      √ when one `onFulfilled` is added inside another `onFulfilled`
+
+      √ when `onFulfilled` is added inside an `onRejected`
+
+      √ when the promise is fulfilled asynchronously
     Clean-stack execution ordering tests (rejection case)
-      √ when `onRejected` is added immediately before the promise is rejected
-      √ when `onRejected` is added immediately after the promise is rejected
-      √ when `onRejected` is added inside an `onFulfilled`
-      √ when one `onRejected` is added inside another `onRejected`
-      √ when the promise is rejected asynchronously
+
+      √ when `onRejected` is added immediately before the promise is rejected
+
+      √ when `onRejected` is added immediately after the promise is rejected
+
+      √ when `onRejected` is added inside an `onFulfilled`
+
+      √ when one `onRejected` is added inside another `onRejected`
+
+      √ when the promise is rejected asynchronously
 
   2.2.5 `onFulfilled` and `onRejected` must be called as functions (i.e. with no `this` value).
     strict mode
-      √ fulfilled
-      √ rejected
+
+      √ fulfilled
+
+      √ rejected
     sloppy mode
-      √ fulfilled
-      √ rejected
+
+      √ fulfilled
+
+      √ rejected
 
   2.2.6: `then` may be called multiple times on the same promise.
     2.2.6.1: If/when `promise` is fulfilled, all respective `onFulfilled` callbacks must execute in the order of their originating calls to `then`.
       multiple boring fulfillment handlers
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
       multiple fulfillment handlers, one of which throws
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
       results in multiple branching chains with their own fulfillment values
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
       `onFulfilled` handlers are called in the original order
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
         even when one handler is added inside another handler
-          √ already-fulfilled
-          √ immediately-fulfilled
-          √ eventually-fulfilled
+
+          √ already-fulfilled
+
+          √ immediately-fulfilled
+
+          √ eventually-fulfilled
     2.2.6.2: If/when `promise` is rejected, all respective `onRejected` callbacks must execute in the order of their originating calls to `then`.
       multiple boring rejection handlers
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       multiple rejection handlers, one of which throws
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       results in multiple branching chains with their own fulfillment values
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       `onRejected` handlers are called in the original order
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
         even when one handler is added inside another handler
-          √ already-rejected
-          √ immediately-rejected
-          √ eventually-rejected
+
+          √ already-rejected
+
+          √ immediately-rejected
+
+          √ eventually-rejected
 
   2.2.7: `then` must return a promise: `promise2 = promise1.then(onFulfilled, onRejected)`
-    √ is a promise
+
+    √ is a promise
     2.2.7.1: If either `onFulfilled` or `onRejected` returns a value `x`, run the Promise Resolution Procedure `[[Resolve]](promise2, x)`
-      √ see separate 3.3 tests
+
+      √ see separate 3.3 tests
     2.2.7.2: If either `onFulfilled` or `onRejected` throws an exception `e`, `promise2` must be rejected with `e` as the reason.
       The reason is `undefined`
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       The reason is `null`
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       The reason is `false`
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       The reason is `0`
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       The reason is an error
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       The reason is an error without a stack
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       The reason is a date
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       The reason is an object
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       The reason is an always-pending thenable
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       The reason is a fulfilled promise
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       The reason is a rejected promise
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
     2.2.7.3: If `onFulfilled` is not a function and `promise1` is fulfilled, `promise2` must be fulfilled with the same value.
       `onFulfilled` is `undefined`
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
       `onFulfilled` is `null`
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
       `onFulfilled` is `false`
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
       `onFulfilled` is `5`
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
       `onFulfilled` is an object
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
       `onFulfilled` is an array containing a function
-        √ already-fulfilled
-        √ immediately-fulfilled
-        √ eventually-fulfilled
+
+        √ already-fulfilled
+
+        √ immediately-fulfilled
+
+        √ eventually-fulfilled
     2.2.7.4: If `onRejected` is not a function and `promise1` is rejected, `promise2` must be rejected with the same reason.
       `onRejected` is `undefined`
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       `onRejected` is `null`
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       `onRejected` is `false`
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       `onRejected` is `5`
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       `onRejected` is an object
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
       `onRejected` is an array containing a function
-        √ already-rejected
-        √ immediately-rejected
-        √ eventually-rejected
+
+        √ already-rejected
+
+        √ immediately-rejected
+
+        √ eventually-rejected
 
   2.3.1: If `promise` and `x` refer to the same object, reject `promise` with a `TypeError' as the reason.
-    √ via return from a fulfilled promise
-    √ via return from a rejected promise
+
+    √ via return from a fulfilled promise
+
+    √ via return from a rejected promise
 
   2.3.2: If `x` is a promise, adopt its state
     2.3.2.1: If `x` is pending, `promise` must remain pending until `x` is fulfilled or rejected.
-      √ via return from a fulfilled promise
-      √ via return from a rejected promise
+
+      √ via return from a fulfilled promise
+
+      √ via return from a rejected promise
     2.3.2.2: If/when `x` is fulfilled, fulfill `promise` with the same value.
       `x` is already-fulfilled
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `x` is eventually-fulfilled
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
     2.3.2.3: If/when `x` is rejected, reject `promise` with the same reason.
       `x` is already-rejected
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `x` is eventually-rejected
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
 
   2.3.3: Otherwise, if `x` is an object or function,
     2.3.3.1: Let `then` be `x.then`
       `x` is an object with null prototype
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `x` is an object with normal Object.prototype
-        1) via return from a fulfilled promise
-        2) via return from a rejected promise
+
+        1) via return from a fulfilled promise
+
+        2) via return from a rejected promise
       `x` is a function
-        3) via return from a fulfilled promise
-        4) via return from a rejected promise
+
+        3) via return from a fulfilled promise
+
+        4) via return from a rejected promise
     2.3.3.2: If retrieving the property `x.then` results in a thrown exception `e`, reject `promise` with `e` as the reason.
       `e` is `undefined`
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `e` is `null`
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `e` is `false`
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `e` is `0`
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `e` is an error
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `e` is an error without a stack
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `e` is a date
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `e` is an object
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `e` is an always-pending thenable
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `e` is a fulfilled promise
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `e` is a rejected promise
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
     2.3.3.3: If `then` is a function, call it with `x` as `this`, first argument `resolvePromise`, and second argument `rejectPromise`
       Calls with `x` as `this` and two function arguments
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       Uses the original value of `then`
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       2.3.3.3.1: If/when `resolvePromise` is called with value `y`, run `[[Resolve]](promise, y)`
         `y` is not a thenable
           `y` is `undefined`
             `then` calls `resolvePromise` synchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
           `y` is `null`
             `then` calls `resolvePromise` synchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
           `y` is `false`
             `then` calls `resolvePromise` synchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
           `y` is `5`
             `then` calls `resolvePromise` synchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
           `y` is an object
             `then` calls `resolvePromise` synchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
           `y` is an array
             `then` calls `resolvePromise` synchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              √ via return from a fulfilled promise
-              √ via return from a rejected promise
+
+              √ via return from a fulfilled promise
+
+              √ via return from a rejected promise
         `y` is a thenable
           `y` is a synchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              5) via return from a fulfilled promise
-              6) via return from a rejected promise
+
+              5) via return from a fulfilled promise
+
+              6) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              7) via return from a fulfilled promise
-              8) via return from a rejected promise
+
+              7) via return from a fulfilled promise
+
+              8) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              9) via return from a fulfilled promise
-              10) via return from a rejected promise
+
+              9) via return from a fulfilled promise
+
+              10) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              11) via return from a fulfilled promise
-              12) via return from a rejected promise
+
+              11) via return from a fulfilled promise
+
+              12) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable
             `then` calls `resolvePromise` synchronously
-              13) via return from a fulfilled promise
-              14) via return from a rejected promise
+
+              13) via return from a fulfilled promise
+
+              14) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              15) via return from a fulfilled promise
-              16) via return from a rejected promise
+
+              15) via return from a fulfilled promise
+
+              16) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice
             `then` calls `resolvePromise` synchronously
-              17) via return from a fulfilled promise
-              18) via return from a rejected promise
+
+              17) via return from a fulfilled promise
+
+              18) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              19) via return from a fulfilled promise
-              20) via return from a rejected promise
+
+              19) via return from a fulfilled promise
+
+              20) via return from a rejected promise
           `y` is a thenable that fulfills but then throws
             `then` calls `resolvePromise` synchronously
-              21) via return from a fulfilled promise
-              22) via return from a rejected promise
+
+              21) via return from a fulfilled promise
+
+              22) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              23) via return from a fulfilled promise
-              24) via return from a rejected promise
+
+              23) via return from a fulfilled promise
+
+              24) via return from a rejected promise
           `y` is an already-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              25) via return from a fulfilled promise
-              26) via return from a rejected promise
+
+              25) via return from a fulfilled promise
+
+              26) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              27) via return from a fulfilled promise
-              28) via return from a rejected promise
+
+              27) via return from a fulfilled promise
+
+              28) via return from a rejected promise
           `y` is an eventually-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              29) via return from a fulfilled promise
-              30) via return from a rejected promise
+
+              29) via return from a fulfilled promise
+
+              30) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              31) via return from a fulfilled promise
-              32) via return from a rejected promise
+
+              31) via return from a fulfilled promise
+
+              32) via return from a rejected promise
           `y` is a synchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              33) via return from a fulfilled promise
-              34) via return from a rejected promise
+
+              33) via return from a fulfilled promise
+
+              34) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              35) via return from a fulfilled promise
-              36) via return from a rejected promise
+
+              35) via return from a fulfilled promise
+
+              36) via return from a rejected promise
           `y` is an asynchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              37) via return from a fulfilled promise
-              38) via return from a rejected promise
+
+              37) via return from a fulfilled promise
+
+              38) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              39) via return from a fulfilled promise
-              40) via return from a rejected promise
+
+              39) via return from a fulfilled promise
+
+              40) via return from a rejected promise
           `y` is a synchronously-rejected one-time thenable
             `then` calls `resolvePromise` synchronously
-              41) via return from a fulfilled promise
-              42) via return from a rejected promise
+
+              41) via return from a fulfilled promise
+
+              42) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              43) via return from a fulfilled promise
-              44) via return from a rejected promise
+
+              43) via return from a fulfilled promise
+
+              44) via return from a rejected promise
           `y` is a thenable that immediately throws in `then`
             `then` calls `resolvePromise` synchronously
-              45) via return from a fulfilled promise
-              46) via return from a rejected promise
+
+              45) via return from a fulfilled promise
+
+              46) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              47) via return from a fulfilled promise
-              48) via return from a rejected promise
+
+              47) via return from a fulfilled promise
+
+              48) via return from a rejected promise
           `y` is an object with a throwing `then` accessor
             `then` calls `resolvePromise` synchronously
-              49) via return from a fulfilled promise
-              50) via return from a rejected promise
+
+              49) via return from a fulfilled promise
+
+              50) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              51) via return from a fulfilled promise
-              52) via return from a rejected promise
+
+              51) via return from a fulfilled promise
+
+              52) via return from a rejected promise
           `y` is an already-rejected promise
             `then` calls `resolvePromise` synchronously
-              53) via return from a fulfilled promise
-              54) via return from a rejected promise
+
+              53) via return from a fulfilled promise
+
+              54) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              55) via return from a fulfilled promise
-              56) via return from a rejected promise
+
+              55) via return from a fulfilled promise
+
+              56) via return from a rejected promise
           `y` is an eventually-rejected promise
             `then` calls `resolvePromise` synchronously
-              57) via return from a fulfilled promise
-              58) via return from a rejected promise
+
+              57) via return from a fulfilled promise
+
+              58) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              59) via return from a fulfilled promise
-              60) via return from a rejected promise
+
+              59) via return from a fulfilled promise
+
+              60) via return from a rejected promise
         `y` is a thenable for a thenable
           `y` is a synchronously-fulfilled custom thenable for a synchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              61) via return from a fulfilled promise
-              62) via return from a rejected promise
+
+              61) via return from a fulfilled promise
+
+              62) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              63) via return from a fulfilled promise
-              64) via return from a rejected promise
+
+              63) via return from a fulfilled promise
+
+              64) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for an asynchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              65) via return from a fulfilled promise
-              66) via return from a rejected promise
+
+              65) via return from a fulfilled promise
+
+              66) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              67) via return from a fulfilled promise
-              68) via return from a rejected promise
+
+              67) via return from a fulfilled promise
+
+              68) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for a synchronously-fulfilled one-time thenable
             `then` calls `resolvePromise` synchronously
-              69) via return from a fulfilled promise
-              70) via return from a rejected promise
+
+              69) via return from a fulfilled promise
+
+              70) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              71) via return from a fulfilled promise
-              72) via return from a rejected promise
+
+              71) via return from a fulfilled promise
+
+              72) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for a thenable that tries to fulfill twice
             `then` calls `resolvePromise` synchronously
-              73) via return from a fulfilled promise
-              74) via return from a rejected promise
+
+              73) via return from a fulfilled promise
+
+              74) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              75) via return from a fulfilled promise
-              76) via return from a rejected promise
+
+              75) via return from a fulfilled promise
+
+              76) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for a thenable that fulfills but then throws
             `then` calls `resolvePromise` synchronously
-              77) via return from a fulfilled promise
-              78) via return from a rejected promise
+
+              77) via return from a fulfilled promise
+
+              78) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              79) via return from a fulfilled promise
-              80) via return from a rejected promise
+
+              79) via return from a fulfilled promise
+
+              80) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for an already-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              81) via return from a fulfilled promise
-              82) via return from a rejected promise
+
+              81) via return from a fulfilled promise
+
+              82) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              83) via return from a fulfilled promise
-              84) via return from a rejected promise
+
+              83) via return from a fulfilled promise
+
+              84) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for an eventually-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              85) via return from a fulfilled promise
-              86) via return from a rejected promise
+
+              85) via return from a fulfilled promise
+
+              86) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              87) via return from a fulfilled promise
-              88) via return from a rejected promise
+
+              87) via return from a fulfilled promise
+
+              88) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for a synchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              89) via return from a fulfilled promise
-              90) via return from a rejected promise
+
+              89) via return from a fulfilled promise
+
+              90) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              91) via return from a fulfilled promise
-              92) via return from a rejected promise
+
+              91) via return from a fulfilled promise
+
+              92) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for an asynchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              93) via return from a fulfilled promise
-              94) via return from a rejected promise
+
+              93) via return from a fulfilled promise
+
+              94) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              95) via return from a fulfilled promise
-              96) via return from a rejected promise
+
+              95) via return from a fulfilled promise
+
+              96) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for a synchronously-rejected one-time thenable
             `then` calls `resolvePromise` synchronously
-              97) via return from a fulfilled promise
-              98) via return from a rejected promise
+
+              97) via return from a fulfilled promise
+
+              98) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              99) via return from a fulfilled promise
-              100) via return from a rejected promise
+
+              99) via return from a fulfilled promise
+
+              100) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for a thenable that immediately throws in `then`
             `then` calls `resolvePromise` synchronously
-              101) via return from a fulfilled promise
-              102) via return from a rejected promise
+
+              101) via return from a fulfilled promise
+
+              102) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              103) via return from a fulfilled promise
-              104) via return from a rejected promise
+
+              103) via return from a fulfilled promise
+
+              104) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for an object with a throwing `then` accessor
             `then` calls `resolvePromise` synchronously
-              105) via return from a fulfilled promise
-              106) via return from a rejected promise
+
+              105) via return from a fulfilled promise
+
+              106) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              107) via return from a fulfilled promise
-              108) via return from a rejected promise
+
+              107) via return from a fulfilled promise
+
+              108) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for an already-rejected promise
             `then` calls `resolvePromise` synchronously
-              109) via return from a fulfilled promise
-              110) via return from a rejected promise
+
+              109) via return from a fulfilled promise
+
+              110) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              111) via return from a fulfilled promise
-              112) via return from a rejected promise
+
+              111) via return from a fulfilled promise
+
+              112) via return from a rejected promise
           `y` is a synchronously-fulfilled custom thenable for an eventually-rejected promise
             `then` calls `resolvePromise` synchronously
-              113) via return from a fulfilled promise
-              114) via return from a rejected promise
+
+              113) via return from a fulfilled promise
+
+              114) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              115) via return from a fulfilled promise
-              116) via return from a rejected promise
+
+              115) via return from a fulfilled promise
+
+              116) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for a synchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              117) via return from a fulfilled promise
-              118) via return from a rejected promise
+
+              117) via return from a fulfilled promise
+
+              118) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              119) via return from a fulfilled promise
-              120) via return from a rejected promise
+
+              119) via return from a fulfilled promise
+
+              120) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for an asynchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              121) via return from a fulfilled promise
-              122) via return from a rejected promise
+
+              121) via return from a fulfilled promise
+
+              122) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              123) via return from a fulfilled promise
-              124) via return from a rejected promise
+
+              123) via return from a fulfilled promise
+
+              124) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for a synchronously-fulfilled one-time thenable
             `then` calls `resolvePromise` synchronously
-              125) via return from a fulfilled promise
-              126) via return from a rejected promise
+
+              125) via return from a fulfilled promise
+
+              126) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              127) via return from a fulfilled promise
-              128) via return from a rejected promise
+
+              127) via return from a fulfilled promise
+
+              128) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for a thenable that tries to fulfill twice
             `then` calls `resolvePromise` synchronously
-              129) via return from a fulfilled promise
-              130) via return from a rejected promise
+
+              129) via return from a fulfilled promise
+
+              130) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              131) via return from a fulfilled promise
-              132) via return from a rejected promise
+
+              131) via return from a fulfilled promise
+
+              132) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for a thenable that fulfills but then throws
             `then` calls `resolvePromise` synchronously
-              133) via return from a fulfilled promise
-              134) via return from a rejected promise
+
+              133) via return from a fulfilled promise
+
+              134) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              135) via return from a fulfilled promise
-              136) via return from a rejected promise
+
+              135) via return from a fulfilled promise
+
+              136) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for an already-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              137) via return from a fulfilled promise
-              138) via return from a rejected promise
+
+              137) via return from a fulfilled promise
+
+              138) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              139) via return from a fulfilled promise
-              140) via return from a rejected promise
+
+              139) via return from a fulfilled promise
+
+              140) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for an eventually-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              141) via return from a fulfilled promise
-              142) via return from a rejected promise
+
+              141) via return from a fulfilled promise
+
+              142) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              143) via return from a fulfilled promise
-              144) via return from a rejected promise
+
+              143) via return from a fulfilled promise
+
+              144) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for a synchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              145) via return from a fulfilled promise
-              146) via return from a rejected promise
+
+              145) via return from a fulfilled promise
+
+              146) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              147) via return from a fulfilled promise
-              148) via return from a rejected promise
+
+              147) via return from a fulfilled promise
+
+              148) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for an asynchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              149) via return from a fulfilled promise
-              150) via return from a rejected promise
+
+              149) via return from a fulfilled promise
+
+              150) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              151) via return from a fulfilled promise
-              152) via return from a rejected promise
+
+              151) via return from a fulfilled promise
+
+              152) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for a synchronously-rejected one-time thenable
             `then` calls `resolvePromise` synchronously
-              153) via return from a fulfilled promise
-              154) via return from a rejected promise
+
+              153) via return from a fulfilled promise
+
+              154) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              155) via return from a fulfilled promise
-              156) via return from a rejected promise
+
+              155) via return from a fulfilled promise
+
+              156) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for a thenable that immediately throws in `then`
             `then` calls `resolvePromise` synchronously
-              157) via return from a fulfilled promise
-              158) via return from a rejected promise
+
+              157) via return from a fulfilled promise
+
+              158) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              159) via return from a fulfilled promise
-              160) via return from a rejected promise
+
+              159) via return from a fulfilled promise
+
+              160) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for an object with a throwing `then` accessor
             `then` calls `resolvePromise` synchronously
-              161) via return from a fulfilled promise
-              162) via return from a rejected promise
+
+              161) via return from a fulfilled promise
+
+              162) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              163) via return from a fulfilled promise
-              164) via return from a rejected promise
+
+              163) via return from a fulfilled promise
+
+              164) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for an already-rejected promise
             `then` calls `resolvePromise` synchronously
-              165) via return from a fulfilled promise
-              166) via return from a rejected promise
+
+              165) via return from a fulfilled promise
+
+              166) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              167) via return from a fulfilled promise
-              168) via return from a rejected promise
+
+              167) via return from a fulfilled promise
+
+              168) via return from a rejected promise
           `y` is an asynchronously-fulfilled custom thenable for an eventually-rejected promise
             `then` calls `resolvePromise` synchronously
-              169) via return from a fulfilled promise
-              170) via return from a rejected promise
+
+              169) via return from a fulfilled promise
+
+              170) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              171) via return from a fulfilled promise
-              172) via return from a rejected promise
+
+              171) via return from a fulfilled promise
+
+              172) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for a synchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              173) via return from a fulfilled promise
-              174) via return from a rejected promise
+
+              173) via return from a fulfilled promise
+
+              174) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              175) via return from a fulfilled promise
-              176) via return from a rejected promise
+
+              175) via return from a fulfilled promise
+
+              176) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for an asynchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              177) via return from a fulfilled promise
-              178) via return from a rejected promise
+
+              177) via return from a fulfilled promise
+
+              178) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              179) via return from a fulfilled promise
-              180) via return from a rejected promise
+
+              179) via return from a fulfilled promise
+
+              180) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for a synchronously-fulfilled one-time thenable
             `then` calls `resolvePromise` synchronously
-              181) via return from a fulfilled promise
-              182) via return from a rejected promise
+
+              181) via return from a fulfilled promise
+
+              182) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              183) via return from a fulfilled promise
-              184) via return from a rejected promise
+
+              183) via return from a fulfilled promise
+
+              184) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for a thenable that tries to fulfill twice
             `then` calls `resolvePromise` synchronously
-              185) via return from a fulfilled promise
-              186) via return from a rejected promise
+
+              185) via return from a fulfilled promise
+
+              186) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              187) via return from a fulfilled promise
-              188) via return from a rejected promise
+
+              187) via return from a fulfilled promise
+
+              188) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for a thenable that fulfills but then throws
             `then` calls `resolvePromise` synchronously
-              189) via return from a fulfilled promise
-              190) via return from a rejected promise
+
+              189) via return from a fulfilled promise
+
+              190) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              191) via return from a fulfilled promise
-              192) via return from a rejected promise
+
+              191) via return from a fulfilled promise
+
+              192) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for an already-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              193) via return from a fulfilled promise
-              194) via return from a rejected promise
+
+              193) via return from a fulfilled promise
+
+              194) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              195) via return from a fulfilled promise
-              196) via return from a rejected promise
+
+              195) via return from a fulfilled promise
+
+              196) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for an eventually-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              197) via return from a fulfilled promise
-              198) via return from a rejected promise
+
+              197) via return from a fulfilled promise
+
+              198) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              199) via return from a fulfilled promise
-              200) via return from a rejected promise
+
+              199) via return from a fulfilled promise
+
+              200) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for a synchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              201) via return from a fulfilled promise
-              202) via return from a rejected promise
+
+              201) via return from a fulfilled promise
+
+              202) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              203) via return from a fulfilled promise
-              204) via return from a rejected promise
+
+              203) via return from a fulfilled promise
+
+              204) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for an asynchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              205) via return from a fulfilled promise
-              206) via return from a rejected promise
+
+              205) via return from a fulfilled promise
+
+              206) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              207) via return from a fulfilled promise
-              208) via return from a rejected promise
+
+              207) via return from a fulfilled promise
+
+              208) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for a synchronously-rejected one-time thenable
             `then` calls `resolvePromise` synchronously
-              209) via return from a fulfilled promise
-              210) via return from a rejected promise
+
+              209) via return from a fulfilled promise
+
+              210) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              211) via return from a fulfilled promise
-              212) via return from a rejected promise
+
+              211) via return from a fulfilled promise
+
+              212) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for a thenable that immediately throws in `then`
             `then` calls `resolvePromise` synchronously
-              213) via return from a fulfilled promise
-              214) via return from a rejected promise
+
+              213) via return from a fulfilled promise
+
+              214) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              215) via return from a fulfilled promise
-              216) via return from a rejected promise
+
+              215) via return from a fulfilled promise
+
+              216) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for an object with a throwing `then` accessor
             `then` calls `resolvePromise` synchronously
-              217) via return from a fulfilled promise
-              218) via return from a rejected promise
+
+              217) via return from a fulfilled promise
+
+              218) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              219) via return from a fulfilled promise
-              220) via return from a rejected promise
+
+              219) via return from a fulfilled promise
+
+              220) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for an already-rejected promise
             `then` calls `resolvePromise` synchronously
-              221) via return from a fulfilled promise
-              222) via return from a rejected promise
+
+              221) via return from a fulfilled promise
+
+              222) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              223) via return from a fulfilled promise
-              224) via return from a rejected promise
+
+              223) via return from a fulfilled promise
+
+              224) via return from a rejected promise
           `y` is a synchronously-fulfilled one-time thenable for an eventually-rejected promise
             `then` calls `resolvePromise` synchronously
-              225) via return from a fulfilled promise
-              226) via return from a rejected promise
+
+              225) via return from a fulfilled promise
+
+              226) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              227) via return from a fulfilled promise
-              228) via return from a rejected promise
+
+              227) via return from a fulfilled promise
+
+              228) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for a synchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              229) via return from a fulfilled promise
-              230) via return from a rejected promise
+
+              229) via return from a fulfilled promise
+
+              230) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              231) via return from a fulfilled promise
-              232) via return from a rejected promise
+
+              231) via return from a fulfilled promise
+
+              232) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for an asynchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              233) via return from a fulfilled promise
-              234) via return from a rejected promise
+
+              233) via return from a fulfilled promise
+
+              234) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              235) via return from a fulfilled promise
-              236) via return from a rejected promise
+
+              235) via return from a fulfilled promise
+
+              236) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for a synchronously-fulfilled one-time thenable
             `then` calls `resolvePromise` synchronously
-              237) via return from a fulfilled promise
-              238) via return from a rejected promise
+
+              237) via return from a fulfilled promise
+
+              238) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              239) via return from a fulfilled promise
-              240) via return from a rejected promise
+
+              239) via return from a fulfilled promise
+
+              240) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for a thenable that tries to fulfill twice
             `then` calls `resolvePromise` synchronously
-              241) via return from a fulfilled promise
-              242) via return from a rejected promise
+
+              241) via return from a fulfilled promise
+
+              242) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              243) via return from a fulfilled promise
-              244) via return from a rejected promise
+
+              243) via return from a fulfilled promise
+
+              244) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for a thenable that fulfills but then throws
             `then` calls `resolvePromise` synchronously
-              245) via return from a fulfilled promise
-              246) via return from a rejected promise
+
+              245) via return from a fulfilled promise
+
+              246) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              247) via return from a fulfilled promise
-              248) via return from a rejected promise
+
+              247) via return from a fulfilled promise
+
+              248) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for an already-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              249) via return from a fulfilled promise
-              250) via return from a rejected promise
+
+              249) via return from a fulfilled promise
+
+              250) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              251) via return from a fulfilled promise
-              252) via return from a rejected promise
+
+              251) via return from a fulfilled promise
+
+              252) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for an eventually-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              253) via return from a fulfilled promise
-              254) via return from a rejected promise
+
+              253) via return from a fulfilled promise
+
+              254) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              255) via return from a fulfilled promise
-              256) via return from a rejected promise
+
+              255) via return from a fulfilled promise
+
+              256) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for a synchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              257) via return from a fulfilled promise
-              258) via return from a rejected promise
+
+              257) via return from a fulfilled promise
+
+              258) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              259) via return from a fulfilled promise
-              260) via return from a rejected promise
+
+              259) via return from a fulfilled promise
+
+              260) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for an asynchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              261) via return from a fulfilled promise
-              262) via return from a rejected promise
+
+              261) via return from a fulfilled promise
+
+              262) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              263) via return from a fulfilled promise
-              264) via return from a rejected promise
+
+              263) via return from a fulfilled promise
+
+              264) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for a synchronously-rejected one-time thenable
             `then` calls `resolvePromise` synchronously
-              265) via return from a fulfilled promise
-              266) via return from a rejected promise
+
+              265) via return from a fulfilled promise
+
+              266) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              267) via return from a fulfilled promise
-              268) via return from a rejected promise
+
+              267) via return from a fulfilled promise
+
+              268) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for a thenable that immediately throws in `then`
             `then` calls `resolvePromise` synchronously
-              269) via return from a fulfilled promise
-              270) via return from a rejected promise
+
+              269) via return from a fulfilled promise
+
+              270) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              271) via return from a fulfilled promise
-              272) via return from a rejected promise
+
+              271) via return from a fulfilled promise
+
+              272) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for an object with a throwing `then` accessor
             `then` calls `resolvePromise` synchronously
-              273) via return from a fulfilled promise
-              274) via return from a rejected promise
+
+              273) via return from a fulfilled promise
+
+              274) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              275) via return from a fulfilled promise
-              276) via return from a rejected promise
+
+              275) via return from a fulfilled promise
+
+              276) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for an already-rejected promise
             `then` calls `resolvePromise` synchronously
-              277) via return from a fulfilled promise
-              278) via return from a rejected promise
+
+              277) via return from a fulfilled promise
+
+              278) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              279) via return from a fulfilled promise
-              280) via return from a rejected promise
+
+              279) via return from a fulfilled promise
+
+              280) via return from a rejected promise
           `y` is a thenable that tries to fulfill twice for an eventually-rejected promise
             `then` calls `resolvePromise` synchronously
-              281) via return from a fulfilled promise
-              282) via return from a rejected promise
+
+              281) via return from a fulfilled promise
+
+              282) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              283) via return from a fulfilled promise
-              284) via return from a rejected promise
+
+              283) via return from a fulfilled promise
+
+              284) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for a synchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              285) via return from a fulfilled promise
-              286) via return from a rejected promise
+
+              285) via return from a fulfilled promise
+
+              286) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              287) via return from a fulfilled promise
-              288) via return from a rejected promise
+
+              287) via return from a fulfilled promise
+
+              288) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for an asynchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              289) via return from a fulfilled promise
-              290) via return from a rejected promise
+
+              289) via return from a fulfilled promise
+
+              290) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              291) via return from a fulfilled promise
-              292) via return from a rejected promise
+
+              291) via return from a fulfilled promise
+
+              292) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for a synchronously-fulfilled one-time thenable
             `then` calls `resolvePromise` synchronously
-              293) via return from a fulfilled promise
-              294) via return from a rejected promise
+
+              293) via return from a fulfilled promise
+
+              294) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              295) via return from a fulfilled promise
-              296) via return from a rejected promise
+
+              295) via return from a fulfilled promise
+
+              296) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for a thenable that tries to fulfill twice
             `then` calls `resolvePromise` synchronously
-              297) via return from a fulfilled promise
-              298) via return from a rejected promise
+
+              297) via return from a fulfilled promise
+
+              298) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              299) via return from a fulfilled promise
-              300) via return from a rejected promise
+
+              299) via return from a fulfilled promise
+
+              300) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for a thenable that fulfills but then throws
             `then` calls `resolvePromise` synchronously
-              301) via return from a fulfilled promise
-              302) via return from a rejected promise
+
+              301) via return from a fulfilled promise
+
+              302) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              303) via return from a fulfilled promise
-              304) via return from a rejected promise
+
+              303) via return from a fulfilled promise
+
+              304) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for an already-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              305) via return from a fulfilled promise
-              306) via return from a rejected promise
+
+              305) via return from a fulfilled promise
+
+              306) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              307) via return from a fulfilled promise
-              308) via return from a rejected promise
+
+              307) via return from a fulfilled promise
+
+              308) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for an eventually-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              309) via return from a fulfilled promise
-              310) via return from a rejected promise
+
+              309) via return from a fulfilled promise
+
+              310) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              311) via return from a fulfilled promise
-              312) via return from a rejected promise
+
+              311) via return from a fulfilled promise
+
+              312) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for a synchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              313) via return from a fulfilled promise
-              314) via return from a rejected promise
+
+              313) via return from a fulfilled promise
+
+              314) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              315) via return from a fulfilled promise
-              316) via return from a rejected promise
+
+              315) via return from a fulfilled promise
+
+              316) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for an asynchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              317) via return from a fulfilled promise
-              318) via return from a rejected promise
+
+              317) via return from a fulfilled promise
+
+              318) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              319) via return from a fulfilled promise
-              320) via return from a rejected promise
+
+              319) via return from a fulfilled promise
+
+              320) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for a synchronously-rejected one-time thenable
             `then` calls `resolvePromise` synchronously
-              321) via return from a fulfilled promise
-              322) via return from a rejected promise
+
+              321) via return from a fulfilled promise
+
+              322) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              323) via return from a fulfilled promise
-              324) via return from a rejected promise
+
+              323) via return from a fulfilled promise
+
+              324) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for a thenable that immediately throws in `then`
             `then` calls `resolvePromise` synchronously
-              325) via return from a fulfilled promise
-              326) via return from a rejected promise
+
+              325) via return from a fulfilled promise
+
+              326) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              327) via return from a fulfilled promise
-              328) via return from a rejected promise
+
+              327) via return from a fulfilled promise
+
+              328) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for an object with a throwing `then` accessor
             `then` calls `resolvePromise` synchronously
-              329) via return from a fulfilled promise
-              330) via return from a rejected promise
+
+              329) via return from a fulfilled promise
+
+              330) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              331) via return from a fulfilled promise
-              332) via return from a rejected promise
+
+              331) via return from a fulfilled promise
+
+              332) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for an already-rejected promise
             `then` calls `resolvePromise` synchronously
-              333) via return from a fulfilled promise
-              334) via return from a rejected promise
+
+              333) via return from a fulfilled promise
+
+              334) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              335) via return from a fulfilled promise
-              336) via return from a rejected promise
+
+              335) via return from a fulfilled promise
+
+              336) via return from a rejected promise
           `y` is a thenable that fulfills but then throws for an eventually-rejected promise
             `then` calls `resolvePromise` synchronously
-              337) via return from a fulfilled promise
-              338) via return from a rejected promise
+
+              337) via return from a fulfilled promise
+
+              338) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              339) via return from a fulfilled promise
-              340) via return from a rejected promise
+
+              339) via return from a fulfilled promise
+
+              340) via return from a rejected promise
           `y` is an already-fulfilled promise for a synchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              341) via return from a fulfilled promise
-              342) via return from a rejected promise
+
+              341) via return from a fulfilled promise
+
+              342) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              343) via return from a fulfilled promise
-              344) via return from a rejected promise
+
+              343) via return from a fulfilled promise
+
+              344) via return from a rejected promise
           `y` is an already-fulfilled promise for an asynchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              345) via return from a fulfilled promise
-              346) via return from a rejected promise
+
+              345) via return from a fulfilled promise
+
+              346) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              347) via return from a fulfilled promise
-              348) via return from a rejected promise
+
+              347) via return from a fulfilled promise
+
+              348) via return from a rejected promise
           `y` is an already-fulfilled promise for a synchronously-fulfilled one-time thenable
             `then` calls `resolvePromise` synchronously
-              349) via return from a fulfilled promise
-              350) via return from a rejected promise
+
+              349) via return from a fulfilled promise
+
+              350) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              351) via return from a fulfilled promise
-              352) via return from a rejected promise
+
+              351) via return from a fulfilled promise
+
+              352) via return from a rejected promise
           `y` is an already-fulfilled promise for a thenable that tries to fulfill twice
             `then` calls `resolvePromise` synchronously
-              353) via return from a fulfilled promise
-              354) via return from a rejected promise
+
+              353) via return from a fulfilled promise
+
+              354) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              355) via return from a fulfilled promise
-              356) via return from a rejected promise
+
+              355) via return from a fulfilled promise
+
+              356) via return from a rejected promise
           `y` is an already-fulfilled promise for a thenable that fulfills but then throws
             `then` calls `resolvePromise` synchronously
-              357) via return from a fulfilled promise
-              358) via return from a rejected promise
+
+              357) via return from a fulfilled promise
+
+              358) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              359) via return from a fulfilled promise
-              360) via return from a rejected promise
+
+              359) via return from a fulfilled promise
+
+              360) via return from a rejected promise
           `y` is an already-fulfilled promise for an already-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              361) via return from a fulfilled promise
-              362) via return from a rejected promise
+
+              361) via return from a fulfilled promise
+
+              362) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              363) via return from a fulfilled promise
-              364) via return from a rejected promise
+
+              363) via return from a fulfilled promise
+
+              364) via return from a rejected promise
           `y` is an already-fulfilled promise for an eventually-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              365) via return from a fulfilled promise
-              366) via return from a rejected promise
+
+              365) via return from a fulfilled promise
+
+              366) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              367) via return from a fulfilled promise
-              368) via return from a rejected promise
+
+              367) via return from a fulfilled promise
+
+              368) via return from a rejected promise
           `y` is an already-fulfilled promise for a synchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              369) via return from a fulfilled promise
-              370) via return from a rejected promise
+
+              369) via return from a fulfilled promise
+
+              370) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              371) via return from a fulfilled promise
-              372) via return from a rejected promise
+
+              371) via return from a fulfilled promise
+
+              372) via return from a rejected promise
           `y` is an already-fulfilled promise for an asynchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              373) via return from a fulfilled promise
-              374) via return from a rejected promise
+
+              373) via return from a fulfilled promise
+
+              374) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              375) via return from a fulfilled promise
-              376) via return from a rejected promise
+
+              375) via return from a fulfilled promise
+
+              376) via return from a rejected promise
           `y` is an already-fulfilled promise for a synchronously-rejected one-time thenable
             `then` calls `resolvePromise` synchronously
-              377) via return from a fulfilled promise
-              378) via return from a rejected promise
+
+              377) via return from a fulfilled promise
+
+              378) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              379) via return from a fulfilled promise
-              380) via return from a rejected promise
+
+              379) via return from a fulfilled promise
+
+              380) via return from a rejected promise
           `y` is an already-fulfilled promise for a thenable that immediately throws in `then`
             `then` calls `resolvePromise` synchronously
-              381) via return from a fulfilled promise
-              382) via return from a rejected promise
+
+              381) via return from a fulfilled promise
+
+              382) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              383) via return from a fulfilled promise
-              384) via return from a rejected promise
+
+              383) via return from a fulfilled promise
+
+              384) via return from a rejected promise
           `y` is an already-fulfilled promise for an object with a throwing `then` accessor
             `then` calls `resolvePromise` synchronously
-              385) via return from a fulfilled promise
-              386) via return from a rejected promise
+
+              385) via return from a fulfilled promise
+
+              386) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              387) via return from a fulfilled promise
-              388) via return from a rejected promise
+
+              387) via return from a fulfilled promise
+
+              388) via return from a rejected promise
           `y` is an already-fulfilled promise for an already-rejected promise
             `then` calls `resolvePromise` synchronously
-              389) via return from a fulfilled promise
-              390) via return from a rejected promise
+
+              389) via return from a fulfilled promise
+
+              390) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              391) via return from a fulfilled promise
-              392) via return from a rejected promise
+
+              391) via return from a fulfilled promise
+
+              392) via return from a rejected promise
           `y` is an already-fulfilled promise for an eventually-rejected promise
             `then` calls `resolvePromise` synchronously
-              393) via return from a fulfilled promise
-              394) via return from a rejected promise
+
+              393) via return from a fulfilled promise
+
+              394) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              395) via return from a fulfilled promise
-              396) via return from a rejected promise
+
+              395) via return from a fulfilled promise
+
+              396) via return from a rejected promise
           `y` is an eventually-fulfilled promise for a synchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              397) via return from a fulfilled promise
-              398) via return from a rejected promise
+
+              397) via return from a fulfilled promise
+
+              398) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              399) via return from a fulfilled promise
-              400) via return from a rejected promise
+
+              399) via return from a fulfilled promise
+
+              400) via return from a rejected promise
           `y` is an eventually-fulfilled promise for an asynchronously-fulfilled custom thenable
             `then` calls `resolvePromise` synchronously
-              401) via return from a fulfilled promise
-              402) via return from a rejected promise
+
+              401) via return from a fulfilled promise
+
+              402) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              403) via return from a fulfilled promise
-              404) via return from a rejected promise
+
+              403) via return from a fulfilled promise
+
+              404) via return from a rejected promise
           `y` is an eventually-fulfilled promise for a synchronously-fulfilled one-time thenable
             `then` calls `resolvePromise` synchronously
-              405) via return from a fulfilled promise
-              406) via return from a rejected promise
+
+              405) via return from a fulfilled promise
+
+              406) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              407) via return from a fulfilled promise
-              408) via return from a rejected promise
+
+              407) via return from a fulfilled promise
+
+              408) via return from a rejected promise
           `y` is an eventually-fulfilled promise for a thenable that tries to fulfill twice
             `then` calls `resolvePromise` synchronously
-              409) via return from a fulfilled promise
-              410) via return from a rejected promise
+
+              409) via return from a fulfilled promise
+
+              410) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              411) via return from a fulfilled promise
-              412) via return from a rejected promise
+
+              411) via return from a fulfilled promise
+
+              412) via return from a rejected promise
           `y` is an eventually-fulfilled promise for a thenable that fulfills but then throws
             `then` calls `resolvePromise` synchronously
-              413) via return from a fulfilled promise
-              414) via return from a rejected promise
+
+              413) via return from a fulfilled promise
+
+              414) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              415) via return from a fulfilled promise
-              416) via return from a rejected promise
+
+              415) via return from a fulfilled promise
+
+              416) via return from a rejected promise
           `y` is an eventually-fulfilled promise for an already-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              417) via return from a fulfilled promise
-              418) via return from a rejected promise
+
+              417) via return from a fulfilled promise
+
+              418) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              419) via return from a fulfilled promise
-              420) via return from a rejected promise
+
+              419) via return from a fulfilled promise
+
+              420) via return from a rejected promise
           `y` is an eventually-fulfilled promise for an eventually-fulfilled promise
             `then` calls `resolvePromise` synchronously
-              421) via return from a fulfilled promise
-              422) via return from a rejected promise
+
+              421) via return from a fulfilled promise
+
+              422) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              423) via return from a fulfilled promise
-              424) via return from a rejected promise
+
+              423) via return from a fulfilled promise
+
+              424) via return from a rejected promise
           `y` is an eventually-fulfilled promise for a synchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              425) via return from a fulfilled promise
-              426) via return from a rejected promise
+
+              425) via return from a fulfilled promise
+
+              426) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              427) via return from a fulfilled promise
-              428) via return from a rejected promise
+
+              427) via return from a fulfilled promise
+
+              428) via return from a rejected promise
           `y` is an eventually-fulfilled promise for an asynchronously-rejected custom thenable
             `then` calls `resolvePromise` synchronously
-              429) via return from a fulfilled promise
-              430) via return from a rejected promise
+
+              429) via return from a fulfilled promise
+
+              430) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              431) via return from a fulfilled promise
-              432) via return from a rejected promise
+
+              431) via return from a fulfilled promise
+
+              432) via return from a rejected promise
           `y` is an eventually-fulfilled promise for a synchronously-rejected one-time thenable
             `then` calls `resolvePromise` synchronously
-              433) via return from a fulfilled promise
-              434) via return from a rejected promise
+
+              433) via return from a fulfilled promise
+
+              434) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              435) via return from a fulfilled promise
-              436) via return from a rejected promise
+
+              435) via return from a fulfilled promise
+
+              436) via return from a rejected promise
           `y` is an eventually-fulfilled promise for a thenable that immediately throws in `then`
             `then` calls `resolvePromise` synchronously
-              437) via return from a fulfilled promise
-              438) via return from a rejected promise
+
+              437) via return from a fulfilled promise
+
+              438) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              439) via return from a fulfilled promise
-              440) via return from a rejected promise
+
+              439) via return from a fulfilled promise
+
+              440) via return from a rejected promise
           `y` is an eventually-fulfilled promise for an object with a throwing `then` accessor
             `then` calls `resolvePromise` synchronously
-              441) via return from a fulfilled promise
-              442) via return from a rejected promise
+
+              441) via return from a fulfilled promise
+
+              442) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              443) via return from a fulfilled promise
-              444) via return from a rejected promise
+
+              443) via return from a fulfilled promise
+
+              444) via return from a rejected promise
           `y` is an eventually-fulfilled promise for an already-rejected promise
             `then` calls `resolvePromise` synchronously
-              445) via return from a fulfilled promise
-              446) via return from a rejected promise
+
+              445) via return from a fulfilled promise
+
+              446) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              447) via return from a fulfilled promise
-              448) via return from a rejected promise
+
+              447) via return from a fulfilled promise
+
+              448) via return from a rejected promise
           `y` is an eventually-fulfilled promise for an eventually-rejected promise
             `then` calls `resolvePromise` synchronously
-              449) via return from a fulfilled promise
-              450) via return from a rejected promise
+
+              449) via return from a fulfilled promise
+
+              450) via return from a rejected promise
             `then` calls `resolvePromise` asynchronously
-              451) via return from a fulfilled promise
-              452) via return from a rejected promise
+
+              451) via return from a fulfilled promise
+
+              452) via return from a rejected promise
       2.3.3.3.2: If/when `rejectPromise` is called with reason `r`, reject `promise` with `r`
         `r` is `undefined`
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         `r` is `null`
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         `r` is `false`
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         `r` is `0`
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         `r` is an error
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         `r` is an error without a stack
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         `r` is a date
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         `r` is an object
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         `r` is an always-pending thenable
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         `r` is a fulfilled promise
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         `r` is a rejected promise
           `then` calls `rejectPromise` synchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `then` calls `rejectPromise` asynchronously
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
       2.3.3.3.3: If both `resolvePromise` and `rejectPromise` are called, or multiple calls to the same argument are made, the first call takes precedence, and any further calls are ignored.
         calling `resolvePromise` then `rejectPromise`, both synchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `resolvePromise` synchronously then `rejectPromise` asynchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `resolvePromise` then `rejectPromise`, both asynchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `resolvePromise` with an asynchronously-fulfilled promise, then calling `rejectPromise`, both synchronously
-          453) via return from a fulfilled promise
-          454) via return from a rejected promise
+
+          453) via return from a fulfilled promise
+
+          454) via return from a rejected promise
         calling `resolvePromise` with an asynchronously-rejected promise, then calling `rejectPromise`, both synchronously
-          455) via return from a fulfilled promise
-          456) via return from a rejected promise
+
+          455) via return from a fulfilled promise
+
+          456) via return from a rejected promise
         calling `rejectPromise` then `resolvePromise`, both synchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `rejectPromise` synchronously then `resolvePromise` asynchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `rejectPromise` then `resolvePromise`, both asynchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `resolvePromise` twice synchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `resolvePromise` twice, first synchronously then asynchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `resolvePromise` twice, both times asynchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `resolvePromise` with an asynchronously-fulfilled promise, then calling it again, both times synchronously
-          457) via return from a fulfilled promise
-          458) via return from a rejected promise
+
+          457) via return from a fulfilled promise
+
+          458) via return from a rejected promise
         calling `resolvePromise` with an asynchronously-rejected promise, then calling it again, both times synchronously
-          459) via return from a fulfilled promise
-          460) via return from a rejected promise
+
+          459) via return from a fulfilled promise
+
+          460) via return from a rejected promise
         calling `rejectPromise` twice synchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `rejectPromise` twice, first synchronously then asynchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         calling `rejectPromise` twice, both times asynchronously
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
         saving and abusing `resolvePromise` and `rejectPromise`
-          √ via return from a fulfilled promise
-          √ via return from a rejected promise
+
+          √ via return from a fulfilled promise
+
+          √ via return from a rejected promise
       2.3.3.3.4: If calling `then` throws an exception `e`,
         2.3.3.3.4.1: If `resolvePromise` or `rejectPromise` have been called, ignore it.
           `resolvePromise` was called with a non-thenable
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `resolvePromise` was called with an asynchronously-fulfilled promise
-            461) via return from a fulfilled promise
-            462) via return from a rejected promise
+
+            461) via return from a fulfilled promise
+
+            462) via return from a rejected promise
           `resolvePromise` was called with an asynchronously-rejected promise
-            463) via return from a fulfilled promise
-            464) via return from a rejected promise
+
+            463) via return from a fulfilled promise
+
+            464) via return from a rejected promise
           `rejectPromise` was called
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `resolvePromise` then `rejectPromise` were called
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `rejectPromise` then `resolvePromise` were called
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
         2.3.3.3.4.2: Otherwise, reject `promise` with `e` as the reason.
           straightforward case
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `resolvePromise` is called asynchronously before the `throw`
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
           `rejectPromise` is called asynchronously before the `throw`
-            √ via return from a fulfilled promise
-            √ via return from a rejected promise
+
+            √ via return from a fulfilled promise
+
+            √ via return from a rejected promise
     2.3.3.4: If `then` is not a function, fulfill promise with `x`
       `then` is `5`
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `then` is an object
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `then` is an array containing a function
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `then` is a regular expression
-        √ via return from a fulfilled promise
-        √ via return from a rejected promise
+
+        √ via return from a fulfilled promise
+
+        √ via return from a rejected promise
       `then` is an object inheriting from `Function.prototype`
-        465) via return from a fulfilled promise
-        466) via return from a rejected promise
+
+        465) via return from a fulfilled promise
+
+        466) via return from a rejected promise
 
   2.3.4: If `x` is not an object or function, fulfill `promise` with `x`
     The value is `undefined`
-      √ already-fulfilled
-      √ immediately-fulfilled
-      √ eventually-fulfilled
-      √ already-rejected
-      √ immediately-rejected
-      √ eventually-rejected
+
+      √ already-fulfilled
+
+      √ immediately-fulfilled
+
+      √ eventually-fulfilled
+
+      √ already-rejected
+
+      √ immediately-rejected
+
+      √ eventually-rejected
     The value is `null`
-      √ already-fulfilled
-      √ immediately-fulfilled
-      √ eventually-fulfilled
-      √ already-rejected
-      √ immediately-rejected
-      √ eventually-rejected
+
+      √ already-fulfilled
+
+      √ immediately-fulfilled
+
+      √ eventually-fulfilled
+
+      √ already-rejected
+
+      √ immediately-rejected
+
+      √ eventually-rejected
     The value is `false`
-      √ already-fulfilled
-      √ immediately-fulfilled
-      √ eventually-fulfilled
-      √ already-rejected
-      √ immediately-rejected
-      √ eventually-rejected
+
+      √ already-fulfilled
+
+      √ immediately-fulfilled
+
+      √ eventually-fulfilled
+
+      √ already-rejected
+
+      √ immediately-rejected
+
+      √ eventually-rejected
     The value is `true`
-      √ already-fulfilled
-      √ immediately-fulfilled
-      √ eventually-fulfilled
-      √ already-rejected
-      √ immediately-rejected
-      √ eventually-rejected
+
+      √ already-fulfilled
+
+      √ immediately-fulfilled
+
+      √ eventually-fulfilled
+
+      √ already-rejected
+
+      √ immediately-rejected
+
+      √ eventually-rejected
     The value is `0`
-      √ already-fulfilled
-      √ immediately-fulfilled
-      √ eventually-fulfilled
-      √ already-rejected
-      √ immediately-rejected
-      √ eventually-rejected
+
+      √ already-fulfilled
+
+      √ immediately-fulfilled
+
+      √ eventually-fulfilled
+
+      √ already-rejected
+
+      √ immediately-rejected
+
+      √ eventually-rejected
     The value is `true` with `Boolean.prototype` modified to have a `then` method
-      √ already-fulfilled
-      √ immediately-fulfilled
-      √ eventually-fulfilled
-      √ already-rejected
-      √ immediately-rejected
-      √ eventually-rejected
+
+      √ already-fulfilled
+
+      √ immediately-fulfilled
+
+      √ eventually-fulfilled
+
+      √ already-rejected
+
+      √ immediately-rejected
+
+      √ eventually-rejected
     The value is `1` with `Number.prototype` modified to have a `then` method
-      √ already-fulfilled
-      √ immediately-fulfilled
-      √ eventually-fulfilled
-      √ already-rejected
-      √ immediately-rejected
-      √ eventually-rejected
+
+      √ already-fulfilled
+
+      √ immediately-fulfilled
+
+      √ eventually-fulfilled
+
+      √ already-rejected
+
+      √ immediately-rejected
+
+      √ eventually-rejected
 
 
   406 passing (2m)
   466 failing
 
-  1) 2.3.3: Otherwise, if `x` is an object or function, 2.3.3.1: Let `then` be `x.then` `x` is an object with normal Object.prototype via return from a fulfilled promise:
+  1) 2.3.3: Otherwise, if `x` is an object or function,
+        2.3.3.1: Let `then` be `x.then` `x` is an object with normal Object.prototype via return from a fulfilled promise:
      Error: timeout of 200ms exceeded. Ensure the done() callback is being called in this test.
       at Timeout.<anonymous> (C:\CODE\Promise\node_modules\mocha\lib\runnable.js:226:19)
 
