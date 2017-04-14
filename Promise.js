@@ -34,41 +34,39 @@
             then: function (onFulfilled, onRejected) {
                 return new _Promise(function (res, rej) {
                     _resolving();
-
-                    if (onFulfilled instanceof Function)
-                        _resolveQ.push(
-                            then.call(this, res, onFulfilled, rej)
-                        );
-                    else
-                        _resolveQ.push(adoptState(res));
-
-                    if (onRejected instanceof Function)
-                        _rejectQ.push(then.call(this, res, onRejected, rej));
-                    else
-                        _rejectQ.push(adoptState(rej));
-
+                    _resolveQ.push( then.call(this, res, onFulfilled, rej, res) );
+                    _rejectQ.push( then.call(this, res, onRejected, rej, rej) );
                 });
             }
         };
 
-        function then(done, on, onFail) {
+        function then(done, on, onFail, onAdopt) {
             var me = this;
-             function resolution(x) {
+            function resolution(x,next) {
                 try {
-                    if (x == me) throw TypeError('return current(this) promise are forbidden');
-
-                    if (x === Object(x) && x.then instanceof Function) {
-                        return x.then(resolution, resolution);
-                    }
-                    done(x);
+                    if (x == me) throw TypeError('promise can`t return itself');
+                    if (x === Object(x) && x.then instanceof Function)
+                        x.then(function (y) {
+                           resolution(y,done)
+                        }, function (y) {
+                            resolution(y,onFail);
+                        });
+                    else
+                        next(x);
 
                 } catch (err) {
                     onFail(err);
                 }
             }
+            function adopeState(value){
+                 onAdopt(value);
+            }
          return  function (value){
              try {
-               return resolution(on(value));
+               if (on instanceof Function)
+                   resolution( on(value), done );
+               else
+                   adopeState(value);
              } catch (err) {
                  onFail(err);
              }
@@ -91,12 +89,6 @@
         }
 
         return me;
-
-        function adoptState(done) {
-            return function (value) {
-                done(value);
-            };
-        }
 
         function resolve(value){
             if (_status === PENDING) {
