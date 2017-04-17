@@ -42,11 +42,12 @@
 
         function then(done, on, onFail, onAdopt) {
             var me = this;
+            var xThen;
             function resolution(x,next) {
                 try {
                     if (x == me) throw TypeError('promise can`t return itself');
-                    if (x === Object(x) && x.then instanceof Function)
-                        x.then(function (y) {
+                    if (x === Object(x) && (xThen = x.then) instanceof Function)
+                        xThen.call(x, function (y) {
                            resolution(y,done)
                         }, function (y) {
                             resolution(y,onFail);
@@ -60,6 +61,7 @@
             }
             function adopeState(value){
                  onAdopt(value);
+
             }
          return  function (value){
              try {
