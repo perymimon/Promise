@@ -1,12 +1,17 @@
 /**
  * Created by pery on 02/04/2017.
  */
-
 (function( window){'use strict';
     window._Promise = _Promise;
 
     function identity (x){return x;}
     function noop (x){}
+    function one(func) {
+        return function(){
+            func && func.apply(this, arguments);
+            func = null;
+        }
+    }
 
     var PENDING = ['pending'],
         REJECT = ['reject'],
@@ -47,11 +52,11 @@
                 try {
                     if (x == me) throw TypeError('promise can`t return itself');
                     if (x === Object(x) && (xThen = x.then) instanceof Function)
-                        xThen.call(x, function (y) {
+                        xThen.call(x, one(function (y) {
                            resolution(y,done)
-                        }, function (y) {
+                        }), one(function (y) {
                             resolution(y,onFail);
-                        });
+                        }));
                     else
                         next(x);
 
@@ -82,7 +87,7 @@
 
         if (cb instanceof Function) {
             try {
-                cb.call(me, resolve, reject);
+                cb.call(me, one(resolve), one(reject));
             } catch (err) {
                 reject(err);
             }
@@ -93,21 +98,21 @@
         return me;
 
         function resolve(value){
-            if (_status === PENDING) {
+            // if (_status === PENDING) {
                 _status = RESOLVE;
                 _value = value;
                 (_resolving = resolving.bind(null, _resolveQ, value))();
-
-            }
+            //
+            // }
         }
 
         function reject(reason) {
-            if (_status === PENDING) {
+            // if (_status === PENDING) {
                 _status = REJECT;
                 _reason = reason;
                 _resolving = resolving.bind(null, _rejectQ, _reason);
                 _resolving();
-            }
+            // }
         }
 
         function resolving(queue, v) {
