@@ -52,7 +52,7 @@
                 var _onFail = onFail;
                 try {
                     if (x == me) throw TypeError('promise can`t return itself');
-                    if (x === Object(x) && (xThen = x.then) instanceof Function)
+                    if (x === Object(x) && typeof (xThen = x.then) === 'function')
                         xThen.call(x, one(function (y) {
                             _onFail = noop;
                            resolution(y)
