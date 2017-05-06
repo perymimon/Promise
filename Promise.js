@@ -48,17 +48,19 @@
         function then(done, on, onFail, onAdopt) {
             var me = this;
             var xThen;
-            function resolution(x,next) {
+            function resolution(x) {
                 var _onFail = onFail;
                 try {
                     if (x == me) throw TypeError('promise can`t return itself');
                     if (x === Object(x) && (xThen = x.then) instanceof Function)
                         xThen.call(x, one(function (y) {
                             _onFail = noop;
-                           resolution(y,done)
-                        }), onFail);
+                           resolution(y)
+                        }), function(r) {
+                            _onFail(r);
+                        });
                     else
-                        next(x);
+                        done(x);
 
                 } catch (err) {
                     _onFail(err);
