@@ -49,19 +49,22 @@
             var me = this;
             var xThen;
             function resolution(x,next) {
+                var _onFail = onFail;
                 try {
                     if (x == me) throw TypeError('promise can`t return itself');
                     if (x === Object(x) && (xThen = x.then) instanceof Function)
                         xThen.call(x, one(function (y) {
+                            _onFail = noop;
                            resolution(y,done)
                         }), one(function (y) {
+                            _onFail = noop;
                             resolution(y,onFail);
                         }));
                     else
                         next(x);
 
                 } catch (err) {
-                    onFail(err);
+                    _onFail(err);
                 }
             }
             function adopeState(value){
