@@ -56,10 +56,7 @@
                         xThen.call(x, one(function (y) {
                             _onFail = noop;
                            resolution(y,done)
-                        }), one(function (y) {
-                            _onFail = noop;
-                            resolution(y,onFail);
-                        }));
+                        }), onFail);
                     else
                         next(x);
 
