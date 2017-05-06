@@ -98,21 +98,20 @@
         return me;
 
         function resolve(value){
-            // if (_status === PENDING) {
+            if (_status === PENDING) {
                 _status = RESOLVE;
                 _value = value;
                 (_resolving = resolving.bind(null, _resolveQ, value))();
-            //
-            // }
+            }
         }
 
         function reject(reason) {
-            // if (_status === PENDING) {
+            if (_status === PENDING) {
                 _status = REJECT;
                 _reason = reason;
                 _resolving = resolving.bind(null, _rejectQ, _reason);
                 _resolving();
-            // }
+            }
         }
 
         function resolving(queue, v) {
