@@ -2368,8 +2368,8 @@
                 // Retain the function length:
                 var p;
                 if (proxyLength) {
-                    eval("p = (function proxy(" + vars.substring(0, proxyLength * 2 - 1) +
-                        ") { return p.invoke(func, this, slice.call(arguments)); });");
+                    eval("doSomthing = (function proxy(" + vars.substring(0, proxyLength * 2 - 1) +
+                        ") { return doSomthing.invoke(func, this, slice.call(arguments)); });");
                 } else {
                     p = function proxy() {
                         return p.invoke(func, this, slice.call(arguments));

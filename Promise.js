@@ -1,10 +1,9 @@
-/**
- * Created by pery on 02/04/2017.
- */
 (function( window){'use strict';
     window._Promise = _Promise;
+    var PENDING = ['pending'],
+        REJECT = ['reject'],
+        RESOLVE = ['resolve'];
 
-    function identity (x){return x;}
     function noop (x){}
     function one(func) {
         return function(){
@@ -13,9 +12,6 @@
         }
     }
 
-    var PENDING = ['pending'],
-        REJECT = ['reject'],
-        RESOLVE = ['resolve'];
 
     function _Promise(cb) {
         var _status = PENDING;
@@ -126,11 +122,6 @@
                 _resolveQ.length = 0;
             }, 0);
         }
-
-
-
-
-
     }
 
     _Promise.all = function(iterable){
