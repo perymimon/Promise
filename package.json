@@ -1,19 +1,19 @@
 {
   "name": "tiny-promise",
   "version": "1.0.0",
-  "description": "",
+  "description": "polify for native promise for cross browser used or for extend the standart pass A+",
   "main": "Promise.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "promises-aplus-tests test/my-adapter"
+    "test": "node spectTest\\test.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/perymimon/Promise.git"
   },
-  "author": "",
+  "author": "pery mimon",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/perymimon/Promise/issues"
@@ -21,5 +21,12 @@
   "homepage": "https://github.com/perymimon/Promise#readme",
   "devDependencies": {
     "promises-aplus-tests": "^2.1.2"
-  }
+  },
+  "dependencies": {},
+  "keywords": [
+    "promise",
+    "poliffy",
+    "cross-browser",
+    "javascript"
+  ]
 }

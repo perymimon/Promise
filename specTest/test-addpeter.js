@@ -7,7 +7,7 @@
     window.rejected = rejected;
     window.resolved = resolved;
     window.deferred = deferred;
-    var _Promise = window._Promise || require('./../Promise')._Promise;
+    var _Promise = window._Promise || require('./../Promise2')._Promise;
 
     function resolved(value) {
         return _Promise.resolve(value);
@@ -20,7 +20,7 @@
     function deferred() {
         var resolved ;
         var rejected ;
-        var promise = _Promise( function (res, rej) {
+        var promise = new _Promise( function (res, rej) {
             resolved = res;
             rejected = rej;
         });
