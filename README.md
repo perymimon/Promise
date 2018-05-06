@@ -12,11 +12,11 @@ P is compatible with the following browsers/versions:
 
 ## used
 ```javascript
- var doSomthing = new Promise(res, rej){
+ var doSomthing = new Promise(function (res, rej){
     setTimeout(function() {
       res('go on');
     }, 2000);
- }
+ })
 ```
 
 ```javascript
