@@ -10,6 +10,10 @@ P is compatible with the following browsers/versions:
 * Opera
 * IE 7+
 
+##spec
+Spec are [Promises/A+](URL=https://github.com/promises-aplus/promises-spec)  
+And test come from [Promises/A+ Compliance Test Suite](https://github.com/promises-aplus/promises-tests) 
+
 ## used
 ```javascript
  var doSomthing = new Promise(function (res, rej){

@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node spectTest\\test.js"
+    "test": "nodemon --inspect unit-test.js"
   },
   "repository": {
     "type": "git",
