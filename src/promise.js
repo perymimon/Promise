@@ -1,9 +1,7 @@
-var PENDING = ['pending'],
-    REJECT = ['reject'],
-    RESOLVE = ['resolve'];
-
-
-
+var PENDING = [/*'pending'*/],
+    REJECT = [/*'reject'*/],
+    RESOLVE = [/*'resolve'*/],
+    FUNCTION = 'function';
 
 function noop(x) {
 }
@@ -32,10 +30,10 @@ export default function TP(cb) {
         get value() {
             return _value
         },
-        catch: function (onRejected) {
+        catch(onRejected) {
             return TP.then(null, onRejected);
         },
-        then: function (onFulfilled, onRejected) {
+        then(onFulfilled, onRejected) {
             return new TP(function (res, rej) {
                 _resolving();
                 _resolveQ.push(then.call(this, res, onFulfilled, rej, res));
@@ -62,7 +60,7 @@ export default function TP(cb) {
             var _rej = rej;
             try {
                 if (x == me) throw TypeError('promise can`t return itself');
-                if (x === Object(x) && typeof (xThen = x.then) === 'function')
+                if (x === Object(x) && typeof (xThen = x.then) === FUNCTION)
                     xThen.call(x, one(function (y) {
                         _rej = noop;
                         resolution(y)
