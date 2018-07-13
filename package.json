@@ -2,12 +2,13 @@
   "name": "tiny-promise",
   "version": "1.0.0",
   "description": "polify for native promise for cross browser used or for extend the standart pass A+",
-  "main": "Promise.js",
+  "main": "dist/tp.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "nodemon --inspect unit-test.js"
+    "test": "nodemon --inspect unit-test.js",
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
   },
   "homepage": "https://github.com/perymimon/Promise#readme",
   "devDependencies": {
-    "promises-aplus-tests": "^2.1.2"
+    "promises-aplus-tests": "^2.1.2",
+    "rollup-plugin-uglify": "^4.0.0"
   },
   "dependencies": {},
   "keywords": [

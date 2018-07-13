@@ -5,7 +5,7 @@
 
 Tiny Promise
 ============
-TP is implementation of [Promises/A+](URL=https://github.com/promises-aplus/promises-spec) spec
+TP is implementation of [Promises/A+](URL=https://github.com/promises-aplus/promises-spec) spec by using ec5 js only. 
 It's an agnostic, cross-browser and very lightweight library to polyfill native promise and help extend it with more features 
 
 ## Browser Compatibility

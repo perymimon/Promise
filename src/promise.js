@@ -2,8 +2,8 @@ var PENDING = ['pending'],
     REJECT = ['reject'],
     RESOLVE = ['resolve'];
 
-/*export promise*/
-module.exports = P;
+
+
 
 function noop(x) {
 }
@@ -16,7 +16,7 @@ function one(func) {
 }
 
 
-function P(cb) {
+export default function TP(cb) {
     var _status = PENDING;
     var _value = null;
     var _reason = null;
@@ -33,10 +33,10 @@ function P(cb) {
             return _value
         },
         catch: function (onRejected) {
-            return P.then(null, onRejected);
+            return TP.then(null, onRejected);
         },
         then: function (onFulfilled, onRejected) {
-            return new P(function (res, rej) {
+            return new TP(function (res, rej) {
                 _resolving();
                 _resolveQ.push(then.call(this, res, onFulfilled, rej, res));
                 _rejectQ.push(then.call(this, res, onRejected, rej, rej));
@@ -123,7 +123,7 @@ function P(cb) {
     }
 }
 
-P.all = function (iterable) {
+TP.all = function (iterable) {
     return new _Promise(function (res, rej) {
         var ret = [];
         var count = 0;
@@ -140,8 +140,8 @@ P.all = function (iterable) {
     })
 };
 
-P.race = function (iterable) {
-    return new P(function (res, rej) {
+TP.race = function (iterable) {
+    return new TP(function (res, rej) {
         iterable.forEach(function (promise) {
             promise.then(res, rej)
         })
@@ -149,21 +149,21 @@ P.race = function (iterable) {
 
 };
 
-P.reject = function (reason) {
-    return new P(function (res, rej) {
+TP.reject = function (reason) {
+    return new TP(function (res, rej) {
         rej(reason)
     })
 };
-P.resolve = function (value) {
-    return new P(function (res) {
+TP.resolve = function (value) {
+    return new TP(function (res) {
         res(value);
     })
 };
 
-P.deferred = function deferred() {
+TP.deferred = function deferred() {
     var resolved;
     var rejected;
-    var promise = P(function (res, rej) {
+    var promise = TP(function (res, rej) {
         resolved = res;
         rejected = rej;
     });
