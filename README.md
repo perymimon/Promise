@@ -1,4 +1,11 @@
-# Tiny Promise
+<a href="https://promisesaplus.com/" style="float:right">
+    <img src="https://promisesaplus.com/assets/logo-small.png" alt="Promises/A+ logo"
+         title="Promises/A+ 1.0 compliant" align="right" />
+</a>
+
+Tiny Promise
+============
+TP is implementation of [Promises/A+](URL=https://github.com/promises-aplus/promises-spec) spec
 It's an agnostic, cross-browser and very lightweight library to polyfill native promise and help extend it with more features 
 
 ## Browser Compatibility
@@ -11,7 +18,7 @@ P is compatible with the following browsers/versions:
 * IE 7+
 
 ##spec
-Spec are [Promises/A+](URL=https://github.com/promises-aplus/promises-spec)  
+  
 And test come from [Promises/A+ Compliance Test Suite](https://github.com/promises-aplus/promises-tests) 
 
 ## used
