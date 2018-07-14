@@ -13,8 +13,7 @@ function one(func) {
     }
 }
 
-
-export default function TP(cb) {
+export default function TP(initializer) {
     var _status = PENDING;
     var _value = null;
     var _reason = null;
@@ -23,7 +22,19 @@ export default function TP(cb) {
     var _rejectQ = [];
     var _resolving = noop;
 
-    var promise = {
+    var resolver = one(function resolve(value) {
+        _status = RESOLVE;
+        _value = value;
+        resolving(_resolveQ, value);
+    });
+
+    var rejector = one(function reject(reason) {
+        _status = REJECT;
+        _reason = reason;
+        resolving(_rejectQ, _reason);
+    });
+
+    var promisePrototype = {
         get status() {
             return _status[0];
         },
@@ -41,6 +52,31 @@ export default function TP(cb) {
             });
         }
     };
+
+    var me = Object.create(promisePrototype);
+    me.constructor = initializer;
+    if (typeof initializer === FUNCTION) {
+        try {
+            me.constructor(me, resolver, rejector);
+        } catch (err) {
+            reject(err);
+        }
+    } else {
+        resolve(initializer/*value*/);
+    }
+
+
+    function resolving(queue, v) {
+        setTimeout(function () {
+            var i = 0, res;
+            while (res = queue[i++]) {
+                res(v);
+            }
+            _rejectQ.length = 0;
+            _resolveQ.length = 0;
+        }, 0);
+    }
+
 
     function then(res, on, rej, onAdopt) {
         var me = this;
@@ -77,48 +113,10 @@ export default function TP(cb) {
 
     }
 
-    var me = Object.create(promise);
-
-
-    if (cb instanceof Function) {
-        try {
-            cb.call(me, one(resolve), one(reject));
-        } catch (err) {
-            reject(err);
-        }
-    } else {
-        resolve(cb/*value*/);
-    }
 
     return me;
 
-    function resolve(value) {
-        if (_status === PENDING) {
-            _status = RESOLVE;
-            _value = value;
-            (_resolving = resolving.bind(null, _resolveQ, value))();
-        }
-    }
 
-    function reject(reason) {
-        if (_status === PENDING) {
-            _status = REJECT;
-            _reason = reason;
-            _resolving = resolving.bind(null, _rejectQ, _reason);
-            _resolving();
-        }
-    }
-
-    function resolving(queue, v) {
-        setTimeout(function () {
-            for (var i = 0, res; res = queue[i]; i++) {
-                res(v);
-            }
-            _rejectQ.length = 0;
-            /*empty the que */
-            _resolveQ.length = 0;
-        }, 0);
-    }
 }
 
 TP.all = function (iterable) {
