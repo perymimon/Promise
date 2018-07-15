@@ -15,24 +15,38 @@ function one(func) {
 
 export default function TP(initializer) {
     var _status = PENDING;
-    var _value = null;
-    var _reason = null;
+    var _value = null; /*also _reason*/
 
     var _resolveQ = [];
     var _rejectQ = [];
     var _resolving = noop;
+    var decidedQueue = null;
 
     var resolver = one(function resolve(value) {
         _status = RESOLVE;
         _value = value;
-        resolving(_resolveQ, value);
+        decidedQueue = _resolveQ;
+        resolving();
     });
 
     var rejector = one(function reject(reason) {
         _status = REJECT;
-        _reason = reason;
-        resolving(_rejectQ, _reason);
+        // _reason = reason;
+        _value = reason;
+        decidedQueue = _rejectQ;
+        resolving();
     });
+
+    function resolving() {
+        setTimeout(function () {
+            var i = 0, res;
+            while (res = decidedQueue[i++]) {
+                res(_value);
+            }
+            _rejectQ.length = 0;
+            _resolveQ.length = 0;
+        }, 0);
+    }
 
     var promisePrototype = {
         get status() {
@@ -41,10 +55,10 @@ export default function TP(initializer) {
         get value() {
             return _value
         },
-        catch(onRejected) {
+        catch:function (onRejected) {
             return TP.then(null, onRejected);
         },
-        then(onFulfilled, onRejected) {
+        then:function(onFulfilled, onRejected) {
             return new TP(function (res, rej) {
                 _resolving();
                 _resolveQ.push(then.call(this, res, onFulfilled, rej, res));
@@ -55,27 +69,18 @@ export default function TP(initializer) {
 
     var me = Object.create(promisePrototype);
     me.constructor = initializer;
-    if (typeof initializer === FUNCTION) {
+    if (typeof initializer == FUNCTION) {
         try {
-            me.constructor(me, resolver, rejector);
+            me.constructor(resolver, rejector);
         } catch (err) {
-            reject(err);
+            rejector(err);
         }
     } else {
-        resolve(initializer/*value*/);
+        resolver(initializer/*value*/);
     }
 
 
-    function resolving(queue, v) {
-        setTimeout(function () {
-            var i = 0, res;
-            while (res = queue[i++]) {
-                res(v);
-            }
-            _rejectQ.length = 0;
-            _resolveQ.length = 0;
-        }, 0);
-    }
+
 
 
     function then(res, on, rej, onAdopt) {
@@ -120,7 +125,7 @@ export default function TP(initializer) {
 }
 
 TP.all = function (iterable) {
-    return new _Promise(function (res, rej) {
+    return new TP(function (res, rej) {
         var ret = [];
         var count = 0;
 
@@ -157,6 +162,7 @@ TP.resolve = function (value) {
 };
 
 TP.deferred = function deferred() {
+
     var resolved;
     var rejected;
     var promise = TP(function (res, rej) {

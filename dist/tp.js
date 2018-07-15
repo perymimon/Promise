@@ -1,1 +1,176 @@
-!function(n,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):n.TP=t()}(this,function(){"use strict";var h=["pending"],p=["reject"],d=["resolve"];function v(n){}function y(n){return function(){n&&n.apply(this,arguments),n=null}}function m(n){var t=h,e=null,r=[],c=[],o=v,u={get status(){return t[0]},get value(){return e},catch:function(n){return m.then(null,n)},then:function(e,u){return new m(function(n,t){o(),r.push(i.call(this,n,e,t,n)),c.push(i.call(this,n,u,t,t))})}};function i(u,t,r,e){var c,o=this;return function(n){try{t instanceof Function?function t(n){var e=r;try{if(n==o)throw TypeError("promise can`t return itself");n===Object(n)&&"function"==typeof(c=n.then)?c.call(n,y(function(n){e=v,t(n)}),function(n){e(n)}):u(n)}catch(n){e(n)}}(t(n)):e(n)}catch(n){r(n)}}}var f=Object.create(u);if(n instanceof Function)try{n.call(f,y(l),y(a))}catch(n){a(n)}else l(n);return f;function l(n){t===h&&(t=d,(o=s.bind(null,r,e=n))())}function a(n){t===h&&(t=p,(o=s.bind(null,c,n))())}function s(e,u){setTimeout(function(){for(var n,t=0;n=e[t];t++)n(u);c.length=0,r.length=0},0)}}return m.all=function(e){return new _Promise(function(n,t){e.forEach(function(n,t){})})},m.race=function(n){return new m(function(t,e){n.forEach(function(n){n.then(t,e)})})},m.reject=function(e){return new m(function(n,t){t(e)})},m.resolve=function(t){return new m(function(n){n(t)})},m.deferred=function(){var e,u;return{promise:m(function(n,t){e=n,u=t}),resolve:e,reject:u}},m});
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.TP = factory());
+}(this, (function () { 'use strict';
+
+    var PENDING = [/*'pending'*/],
+        REJECT = [/*'reject'*/],
+        RESOLVE = [/*'resolve'*/],
+        FUNCTION = 'function';
+
+    function noop(x) {
+    }
+
+    function one(func) {
+        return function () {
+            func && func.apply(this, arguments);
+            func = null;
+        }
+    }
+
+    function TP(initializer) {
+        var _status = PENDING;
+        var _value = null;
+
+        var _resolveQ = [];
+        var _rejectQ = [];
+        var decidedQueue = null;
+
+        var resolver = one(function resolve(value) {
+            _status = RESOLVE;
+            _value = value;
+            decidedQueue = _resolveQ;
+            resolving();
+        });
+
+        var rejector = one(function reject(reason) {
+            _status = REJECT;
+            // _reason = reason;
+            _value = reason;
+            decidedQueue = _rejectQ;
+            resolving();
+        });
+
+        function resolving() {
+            setTimeout(function () {
+                var i = 0, res;
+                while (res = decidedQueue[i++]) {
+                    res(_value);
+                }
+                _rejectQ.length = 0;
+                _resolveQ.length = 0;
+            }, 0);
+        }
+
+        var promisePrototype = {
+            get status() {
+                return _status[0];
+            },
+            get value() {
+                return _value
+            },
+            catch:function (onRejected) {
+                return TP.then(null, onRejected);
+            },
+            then:function(onFulfilled, onRejected) {
+                return new TP(function (res, rej) {
+                    _resolveQ.push(then.call(this, res, onFulfilled, rej, res));
+                    _rejectQ.push(then.call(this, res, onRejected, rej, rej));
+                });
+            }
+        };
+
+        var me = Object.create(promisePrototype);
+        me.constructor = initializer;
+        if (typeof initializer == FUNCTION) {
+            try {
+                me.constructor(resolver, rejector);
+            } catch (err) {
+                rejector(err);
+            }
+        } else {
+            resolver(initializer/*value*/);
+        }
+
+
+
+
+
+        function then(res, on, rej, onAdopt) {
+            var me = this;
+            var xThen;
+            return function (value) {
+                try {
+                    if (on instanceof Function)
+                        resolution(on(value));
+                    else
+                        onAdopt(value); //adopeState
+                } catch (err) {
+                    rej(err);
+                }
+            };
+
+            function resolution(x) {
+                var _rej = rej;
+                try {
+                    if (x == me) throw TypeError('promise can`t return itself');
+                    if (x === Object(x) && typeof (xThen = x.then) === FUNCTION)
+                        xThen.call(x, one(function (y) {
+                            _rej = noop;
+                            resolution(y);
+                        }), function (r) {
+                            _rej(r);
+                        });
+                    else
+                        res(x);
+
+                } catch (err) {
+                    _rej(err);
+                }
+            }
+
+        }
+
+
+        return me;
+
+
+    }
+
+    TP.all = function (iterable) {
+        return new TP(function (res, rej) {
+
+            iterable.forEach(function (promise, i) {
+            });
+        })
+    };
+
+    TP.race = function (iterable) {
+        return new TP(function (res, rej) {
+            iterable.forEach(function (promise) {
+                promise.then(res, rej);
+            });
+        });
+
+    };
+
+    TP.reject = function (reason) {
+        return new TP(function (res, rej) {
+            rej(reason);
+        })
+    };
+    TP.resolve = function (value) {
+        return new TP(function (res) {
+            res(value);
+        })
+    };
+
+    TP.deferred = function deferred() {
+
+        var resolved;
+        var rejected;
+        var promise = TP(function (res, rej) {
+            resolved = res;
+            rejected = rej;
+        });
+        return {
+            promise: promise,
+            resolve: resolved,
+            reject: rejected
+        }
+    };
+
+    return TP;
+
+})));

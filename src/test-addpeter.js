@@ -2,7 +2,7 @@
 /**
  * Created by pery on 4/9/2017.
  */
-var _Promise = require('./Promise');
+var _Promise = require('./../dist/tp');
 
 
 function resolved(value) {

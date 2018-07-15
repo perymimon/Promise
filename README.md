@@ -8,6 +8,14 @@ Tiny Promise
 TP is implementation of [Promises/A+](URL=https://github.com/promises-aplus/promises-spec) spec by using ec5 js only. 
 It's an agnostic, cross-browser and very lightweight library to polyfill native promise and help extend it with more features 
 
+## Difrent from native promise
+Can be initialled with value
+    
+     const promise = new TP([1,2,3]);
+     promise.then(function( value ){
+        console.log(value) // [1,2,3]
+     })        
+     
 ## Browser Compatibility
 P is compatible with the following browsers/versions:
 * Google Chrome
