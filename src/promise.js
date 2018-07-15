@@ -63,13 +63,47 @@ export default function TP(initializer) {
             return TP.then(null, onRejected);
         },
         then:function(onFulfilled, onRejected) {
-            return new TP(function (res, rej) {
+            return new TP(function (resolve, reject) {
                 _resolving();
-                _resolveQ.push(then.call(this, res, onFulfilled, rej, res));
-                _rejectQ.push(then.call(this, res, onRejected, rej, rej));
+                _resolveQ.push(then.call(this, resolve, reject, onFulfilled, resolve));
+                _rejectQ.push(then.call(this, resolve, reject, onRejected , reject));
             });
         }
     };
+
+
+
+
+
+    function then(resolve, reject, callback, onAdopt) {
+        var me = this;
+        function cb(x){
+            return typeof callback == FUNCTION? resolution(callback(x)): onAdopt(x);
+        }
+        return function (value) {
+            try {
+                cb(value);
+            } catch (err) {
+                reject(err);
+            }
+        };
+
+        function resolution(x) {
+            var xThen;
+            try {
+                if (x == me) throw TypeError('promise can`t return itself');
+                if (x === Object(x) && typeof (xThen = x.then) === FUNCTION)
+                    xThen.call(x, one(resolution), reject);
+                else
+                    resolve(x);
+
+            } catch (err) {
+                reject(err);
+            }
+        }
+
+    }
+
 
     var me = Object.create(promisePrototype);
     me.constructor = initializer;
@@ -82,46 +116,6 @@ export default function TP(initializer) {
     } else {
         fulfilled (initializer/*value*/);
     }
-
-
-
-
-
-    function then(res, on, rej, onAdopt) {
-        var me = this;
-        var xThen;
-        return function (value) {
-            try {
-                if (on instanceof Function)
-                    resolution(on(value));
-                else
-                    onAdopt(value); //adopeState
-            } catch (err) {
-                rej(err);
-            }
-        };
-
-        function resolution(x) {
-            var _rej = rej;
-            try {
-                if (x == me) throw TypeError('promise can`t return itself');
-                if (x === Object(x) && typeof (xThen = x.then) === FUNCTION)
-                    xThen.call(x, one(function (y) {
-                        _rej = noop;
-                        resolution(y)
-                    }), function (r) {
-                        _rej(r);
-                    });
-                else
-                    res(x);
-
-            } catch (err) {
-                _rej(err);
-            }
-        }
-
-    }
-
 
     return me;
 
