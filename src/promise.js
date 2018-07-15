@@ -22,20 +22,24 @@ export default function TP(initializer) {
     var _resolving = noop;
     var decidedQueue = null;
 
-    var resolver = one(function resolve(value) {
-        _status = RESOLVE;
+    var resolver = one(function(status, value, queue){
+        _status = status;
+        // _reason = reason;
         _value = value;
-        decidedQueue = _resolveQ;
+        decidedQueue = queue;
         resolving();
+        _resolving = resolving;
     });
 
-    var rejector = one(function reject(reason) {
-        _status = REJECT;
-        // _reason = reason;
-        _value = reason;
-        decidedQueue = _rejectQ;
-        resolving();
-    });
+    function fulfilled(value) {
+        resolver(RESOLVE, value, _resolveQ);
+    }
+
+    function rejector(reason) {
+        resolver(REJECT, reason, _rejectQ)
+    }
+
+
 
     function resolving() {
         setTimeout(function () {
@@ -71,12 +75,12 @@ export default function TP(initializer) {
     me.constructor = initializer;
     if (typeof initializer == FUNCTION) {
         try {
-            me.constructor(resolver, rejector);
+            me.constructor(fulfilled , rejector);
         } catch (err) {
             rejector(err);
         }
     } else {
-        resolver(initializer/*value*/);
+        fulfilled (initializer/*value*/);
     }
 
 

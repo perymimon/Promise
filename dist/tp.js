@@ -21,26 +21,31 @@
 
     function TP(initializer) {
         var _status = PENDING;
-        var _value = null;
+        var _value = null; /*also _reason*/
 
         var _resolveQ = [];
         var _rejectQ = [];
+        var _resolving = noop;
         var decidedQueue = null;
 
-        var resolver = one(function resolve(value) {
-            _status = RESOLVE;
+        var resolver = one(function(status, value, queue){
+            _status = status;
+            // _reason = reason;
             _value = value;
-            decidedQueue = _resolveQ;
+            decidedQueue = queue;
             resolving();
+            _resolving = resolving;
         });
 
-        var rejector = one(function reject(reason) {
-            _status = REJECT;
-            // _reason = reason;
-            _value = reason;
-            decidedQueue = _rejectQ;
-            resolving();
-        });
+        function fulfilled(value) {
+            resolver(RESOLVE, value, _resolveQ);
+        }
+
+        function rejector(reason) {
+            resolver(REJECT, reason, _rejectQ);
+        }
+
+
 
         function resolving() {
             setTimeout(function () {
@@ -65,6 +70,7 @@
             },
             then:function(onFulfilled, onRejected) {
                 return new TP(function (res, rej) {
+                    _resolving();
                     _resolveQ.push(then.call(this, res, onFulfilled, rej, res));
                     _rejectQ.push(then.call(this, res, onRejected, rej, rej));
                 });
@@ -75,12 +81,12 @@
         me.constructor = initializer;
         if (typeof initializer == FUNCTION) {
             try {
-                me.constructor(resolver, rejector);
+                me.constructor(fulfilled , rejector);
             } catch (err) {
                 rejector(err);
             }
         } else {
-            resolver(initializer/*value*/);
+            fulfilled (initializer/*value*/);
         }
 
 
