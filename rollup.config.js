@@ -1,7 +1,7 @@
 import {uglify} from 'rollup-plugin-uglify';
 
 export default {
-    input: 'src/promise',
+    input: 'src/promise.js',
     output: {
         file: 'dist/tp.js',
         format: 'umd',

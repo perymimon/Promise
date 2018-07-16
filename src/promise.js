@@ -1,132 +1,127 @@
-var PENDING = [/*'pending'*/],
-    REJECT = [/*'reject'*/],
-    RESOLVE = [/*'resolve'*/],
+var PENDING = ['pending'],
+    REJECT = ['reject'],
+    RESOLVE = ['resolve'],
     FUNCTION = 'function';
 
 function noop(x) {
 }
 
-function one(func) {
+function once(func) {
     return function () {
         func && func.apply(this, arguments);
         func = null;
     }
 }
 
-
-export default function TP(cb) {
-    var _status = PENDING;
-    var _value = null;
-    var _reason = null;
-
-    var _resolveQ = [];
-    var _rejectQ = [];
-    var _resolving = noop;
-
-    var promise = {
-        get status() {
-            return _status[0];
+function dependence(resolve, reject) {
+    return {
+        resolve: function () {
+            resolve && resolve.apply(this, arguments);
+            resolve = reject = null;
         },
-        get value() {
-            return _value
-        },
-        catch:function(onRejected) {
-            return TP.then(null, onRejected);
-        },
-        then:function(onFulfilled, onRejected) {
-            return new TP(function (res, rej) {
-                _resolving();
-                _resolveQ.push(then.call(this, res, onFulfilled, rej, res));
-                _rejectQ.push(then.call(this, res, onRejected, rej, rej));
-            });
+        reject: function () {
+            reject && reject.apply(this, arguments);
+            resolve = reject = null;
         }
-    };
-
-    function then(res, on, rej, onAdopt) {
-        var me = this;
-        var xThen;
-        return function (value) {
-            try {
-                if (on instanceof Function)
-                    resolution(on(value));
-                else
-                    onAdopt(value); //adopeState
-            } catch (err) {
-                rej(err);
-            }
-        };
-
-        function resolution(x) {
-            var _rej = rej;
-            try {
-                if (x == me) throw TypeError('promise can`t return itself');
-                if (x === Object(x) && typeof (xThen = x.then) === FUNCTION)
-                    xThen.call(x, one(function (y) {
-                        _rej = noop;
-                        resolution(y)
-                    }), function (r) {
-                        _rej(r);
-                    });
-                else
-                    res(x);
-
-            } catch (err) {
-                _rej(err);
-            }
-        }
-
-    }
-
-    var me = Object.create(promise);
-
-
-    if (cb instanceof Function) {
-        try {
-            cb.call(me, one(resolve), one(reject));
-        } catch (err) {
-            reject(err);
-        }
-    } else {
-        resolve(cb/*value*/);
-    }
-
-    return me;
-
-    function resolve(value) {
-        if (_status === PENDING) {
-            _status = RESOLVE;
-            _value = value;
-            (_resolving = resolving.bind(null, _resolveQ, value))();
-        }
-    }
-
-    function reject(reason) {
-        if (_status === PENDING) {
-            _status = REJECT;
-            _reason = reason;
-            _resolving = resolving.bind(null, _rejectQ, _reason);
-            _resolving();
-        }
-    }
-
-    function resolving(queue, v) {
-        setTimeout(function () {
-            for (var i = 0, res; res = queue[i]; i++) {
-                res(v);
-            }
-            _rejectQ.length = 0;
-            /*empty the que */
-            _resolveQ.length = 0;
-        }, 0);
     }
 }
 
+export default function TP(initializer) {
+    var status = PENDING,
+        value = null,
+        callbackQueue = [];
+
+    var resolving = noop;
+
+    var resolver = once(function (_status, _value) {
+        status = _status;
+        value = _value;
+        (resolving = _resolving.bind(null, status[0]) )();
+    });
+
+    function fulfilled(value) {
+        resolver(RESOLVE, value);
+    }
+
+    function rejector(reason) {
+        resolver(REJECT, reason)
+    }
+
+    function _resolving(actionName) {
+        setTimeout(function () {
+            var i = 0, dataum;
+            while (dataum = callbackQueue[i++]) {
+                then(dataum[1], dataum[0], actionName);
+            }
+            callbackQueue.length = 0;
+        }, 0);
+    }
+
+    var promise = {
+        get status() {
+            return status[0];
+        },
+        get value() {
+            return value
+        },
+        catch: function (onRejected) {
+            return promise.then(null, onRejected);
+        },
+        then: function (onFulfilled, onRejected) {
+            var deferred = TP.deferred();
+            callbackQueue.push([deferred, {resolve:onFulfilled,reject:onRejected } ]);
+            resolving();
+            return deferred.promise;
+        }
+    };
+
+    function then( callbacks, deferred , actionName) {
+        var callback = callbacks[actionName];
+        var adoptState = deferred[actionName];
+        try {
+            typeof callback == FUNCTION ?
+                resolution(callback(value)):
+                adoptState(value);
+        } catch (err) {
+            deferred.reject(err);
+        }
+
+        function resolution(x) {
+            var xThen;
+            var stater = dependence(resolution, deferred.reject);
+            if (x === deferred.promise) throw TypeError('promise can`t return itself');
+            try {
+                if (x === Object(x) && typeof (xThen = x.then) === FUNCTION)
+                    xThen.call(x, stater.resolve, stater.reject);
+                else
+                    deferred.resolve(x);
+
+            } catch (err) {
+                stater.reject(err);
+            }
+        }
+    }
+
+    if (typeof initializer == FUNCTION) {
+        try {
+            initializer.call(promise, fulfilled, rejector);
+        } catch (err) {
+            rejector(err);
+        }
+    } else {
+        fulfilled(initializer/*value*/);
+    }
+
+    return promise;
+
+}
+
 TP.all = function (iterable) {
-    return new _Promise(function (res, rej) {
+    return new TP(function (res, rej) {
         var ret = [];
         var count = 0;
 
-        function ceckout(index, value) {
+        function checkout(index, value) {
             ret[index] = value;
             count++;
             if (count == iterable.length)
@@ -134,6 +129,7 @@ TP.all = function (iterable) {
         }
 
         iterable.forEach(function (promise, i) {
+            promise.then(checkout.bind(promise, i))
         })
     })
 };
@@ -159,6 +155,7 @@ TP.resolve = function (value) {
 };
 
 TP.deferred = function deferred() {
+
     var resolved;
     var rejected;
     var promise = TP(function (res, rej) {
