@@ -30,10 +30,10 @@ export default function TP(cb) {
         get value() {
             return _value
         },
-        catch(onRejected) {
+        catch:function(onRejected) {
             return TP.then(null, onRejected);
         },
-        then(onFulfilled, onRejected) {
+        then:function(onFulfilled, onRejected) {
             return new TP(function (res, rej) {
                 _resolving();
                 _resolveQ.push(then.call(this, res, onFulfilled, rej, res));
