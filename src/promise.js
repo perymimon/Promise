@@ -51,7 +51,7 @@ export default function TP(initializer) {
         setTimeout(function () {
             var i = 0, dataum;
             while (dataum = callbackQueue[i++]) {
-                then(dataum[0], dataum[1], actionName);
+                then(dataum[1], dataum[0], actionName);
             }
             callbackQueue.length = 0;
         }, 0);
@@ -75,7 +75,7 @@ export default function TP(initializer) {
         }
     };
 
-    function then( deferred, callbacks, actionName) {
+    function then( callbacks, deferred , actionName) {
         var callback = callbacks[actionName];
         var adoptState = deferred[actionName];
         try {
