@@ -7,6 +7,6 @@ export default {
         format: 'umd',
         name:'TP'
     },
-    // plugins: [uglify()]
+    plugins: [uglify()]
 
 };
