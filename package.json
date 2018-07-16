@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "nodemon --inspect unit-test.js",
-    "dev": "rollup  src/promise.js --file dist/tp.js --format umd --name 'TP' --watch",
+    "dev": "rollup  src/promise.js --file dist/tp.js --format umd --name TP --watch",
     "build": "rollup -c"
   },
   "repository": {
