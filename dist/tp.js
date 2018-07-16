@@ -33,18 +33,16 @@
     }
 
     function TP(initializer) {
-        var status = PENDING;
-        var value = null;
-        /*also _reason*/
+        var status = PENDING,
+            value = null,
+            callbackQueue = [];
 
-        var callbackQueue = [];
-        var _resolving = noop;
+        var resolving = noop;
 
         var resolver = once(function (_status, _value) {
             status = _status;
             value = _value;
-            resolving();
-            _resolving = resolving;
+            (resolving = _resolving.bind(null, status[0]) )();
         });
 
         function fulfilled(value) {
@@ -55,13 +53,11 @@
             resolver(REJECT, reason);
         }
 
-        function resolving() {
+        function _resolving(actionName) {
             setTimeout(function () {
                 var i = 0, dataum;
-                var callbackName = status[0];
                 while (dataum = callbackQueue[i++]) {
-                    then(dataum[0],dataum[1][callbackName]);
-                    // res(_value);
+                    then(dataum[0], dataum[1], actionName);
                 }
                 callbackQueue.length = 0;
             }, 0);
@@ -75,22 +71,23 @@
                 return value
             },
             catch: function (onRejected) {
-                return TP.then(null, onRejected);
+                return promise.then(null, onRejected);
             },
             then: function (onFulfilled, onRejected) {
                 var deferred = TP.deferred();
                 callbackQueue.push([deferred, {resolve:onFulfilled,reject:onRejected } ]);
-                _resolving();
+                resolving();
                 return deferred.promise;
             }
         };
 
-        // function then(resolve, reject, callback, onAdopt, x) {
-        function then( deferred, callback) {
+        function then( deferred, callbacks, actionName) {
+            var callback = callbacks[actionName];
+            var adoptState = deferred[actionName];
             try {
                 typeof callback == FUNCTION ?
                     resolution(callback(value)):
-                    deferred[status[0]](value);
+                    adoptState(value);
             } catch (err) {
                 deferred.reject(err);
             }
@@ -98,8 +95,8 @@
             function resolution(x) {
                 var xThen;
                 var stater = dependence(resolution, deferred.reject);
+                if (x === deferred.promise) throw TypeError('promise can`t return itself');
                 try {
-                    if (x === deferred.promise) throw TypeError('promise can`t return itself');
                     if (x === Object(x) && typeof (xThen = x.then) === FUNCTION)
                         xThen.call(x, stater.resolve, stater.reject);
                     else
@@ -111,10 +108,9 @@
             }
         }
 
-        promise.constructor = initializer;
         if (typeof initializer == FUNCTION) {
             try {
-                promise.constructor(fulfilled, rejector);
+                initializer.call(promise, fulfilled, rejector);
             } catch (err) {
                 rejector(err);
             }
@@ -123,7 +119,6 @@
         }
 
         return promise;
-
 
     }
 
@@ -140,7 +135,7 @@
             }
 
             iterable.forEach(function (promise, i) {
-                promise.then(checkout);
+                promise.then(checkout.bind(promise, i));
             });
         })
     };
