@@ -20,44 +20,70 @@ TP is compatible with the following browsers/versions:
 ###Spec
 spec's test come from [Promises/A+ Compliance Test Suite](https://github.com/promises-aplus/promises-tests) 
 
-## Used
-simple usage    
+
+
+### API & Usage
+##### constructor 
+ 
+    const promise = TP(function init( resolve, reject ){
+        //some code that call resolve or reject at some point 
+    }) 
     
-    // define new promise that fulified after two seconds
+     // define new promise that fulified after two seconds
     var promise1 = new TP(function (res, rej){
         setTimeout(function() {
           res('go on');
         }, 2000);
     })
     
+##### promise
+    
+    const newPromise = promise.then( fulifiedCallback ( value ){} , rejectCallback(reson){})
+    
+    const newPromise = promise.catch( rejectCallback(reson){} )
+    
+    promise.status // return the status of the promise can be:  'pending', 'reject', 'resolve'      
+        
+    promise.value // return the value of the promise can come from resolve or reject
+     
+#####example 
+
     // then return new value that depend on the fulified value 
-    var promise2 = promise1.then(function fullified(value) {
+        var promise2 = promise1
+      
+    .then(function fulifiedCallback(value) {
         console.log(value); // echo 'go on'
         return value + ' again';
     })
+    
     // do somthing with the new value but expetion are happend so new promise rejected
     .then(function (value) {
         console.log(value); // echo 'go on again'
         throw 'what"s happen???'
     })
+    
     // catch the expection and do somthing with it
     .catch(function(err) {
         console.log(err); // 'what"s happen???'
         return 'every thing ok now' 
     })
+    
     // after that promise are ok again
     .then (function (value){
         console.log(value); // 'every thing ok now'
     })
+    
     // the value that return can be promise, so what happen next depend on the status of the promise
     .then( function (value){
     
         return TP.reject( 'sorry, it just happen' ) 
     })
-    .catch(function(err) {
+    
+    .catch(function rejectCallback(err) {
             console.log(err); // 'sorry, it just happen'
             return 'every thing ok now' 
     }) 
+    
     // the value that return can be even *thentable*, so now the object that you write can decide what happen next 
     .then( function (value){
         return {
@@ -70,26 +96,7 @@ simple usage
         console.log( reason ) // 'ho no'
     })     
 
-
-
-### API
- constructor 
- 
-    const promise = TP(function init( resolve, reject ){
-        //some code that call resolve or reject at some point 
-    }) 
-    
- promise
-    
-    const newPromise = promise.then( fulifiedCallback ( value ){} , rejectCallback(reson){})
-    
-    const newPromise = promise.catch( rejectCallback(reson){} )
-    
-    promise.status // return the status of the promise can be:  'pending', 'reject', 'resolve'      
-    
-    promise.value // return the value of the promise can come from resolve or reject
-    
- static functions
+##### Static functions
  
     TP.all([promise1, promise2, ...] )
     .then(function onAllFilied(values){
@@ -111,3 +118,9 @@ simple usage
     resolvedPromise = TP.resolve(value);
     
     {promise, resolve, reject} = TP.deferred();             
+    
+
+    
+    
+
+
