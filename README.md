@@ -5,7 +5,7 @@
 
 Tiny Promise
 ============
-TP is implementation of [Promises/A+](URL=https://github.com/promises-aplus/promises-spec) spec by using ec5 js only. 
+TP is Tiny (1.5kb minefield) is implementation of [Promises/A+](URL=https://github.com/promises-aplus/promises-spec) spec by using ec5 js only. 
 It's an agnostic, cross-browser and very lightweight library to polyfill native promise and it simple enough to extend it with more features 
 
 ### Browser Compatibility
@@ -18,6 +18,7 @@ TP is compatible with the following browsers/versions:
 * IE 7+
 
 ###Spec
+
 spec's test come from [Promises/A+ Compliance Test Suite](https://github.com/promises-aplus/promises-tests) 
 
 
@@ -46,10 +47,10 @@ spec's test come from [Promises/A+ Compliance Test Suite](https://github.com/pro
         
     promise.value // return the value of the promise can come from resolve or reject
      
-#####example 
+##### example 
 
     // then return new value that depend on the fulified value 
-        var promise2 = promise1
+    var promise2 = promise1
       
     .then(function fulifiedCallback(value) {
         console.log(value); // echo 'go on'
