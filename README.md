@@ -17,7 +17,7 @@ TP is compatible with the following browsers/versions:
 * Opera
 * IE 7+
 
-###Spec
+### Spec
 
 spec's test come from [Promises/A+ Compliance Test Suite](https://github.com/promises-aplus/promises-tests) 
 
