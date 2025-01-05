@@ -1,35 +1,36 @@
 {
   "name": "tiny-promise",
+  "author": "pery mimon",
   "version": "1.0.0",
-  "description": "polify for native promise for cross browser used or for extend the standart pass A+",
-  "main": "dist/tp.js",
+  "description": "polyfill for native promise for cross browser used or for extend the standard pass A+",
+  "main": "src/tinyPromise.js",
+  "type": "module",
+  "engines": {
+    "node": ">=23.x"
+  },
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "nodemon --inspect unit-test.js",
-    "dev": "rollup  src/promise.js --file dist/tp.js --format umd --name TP --watch",
-    "build": "rollup -c"
+    "test": "node --inspect --watch test-runner.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/perymimon/Promise.git"
+  "devDependencies": {
+    "promises-aplus-tests": "^2.1.2"
   },
-  "author": "pery mimon",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/perymimon/Promise/issues"
   },
   "homepage": "https://github.com/perymimon/Promise#readme",
-  "devDependencies": {
-    "promises-aplus-tests": "^2.1.2",
-    "rollup-plugin-uglify": "^4.0.0"
-  },
   "dependencies": {},
   "keywords": [
     "promise",
-    "poliffy",
+    "polyfill",
     "cross-browser",
     "javascript"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/perymimon/Promise.git"
+  }
 }
