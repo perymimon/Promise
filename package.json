@@ -8,11 +8,9 @@
   "engines": {
     "node": ">=23.x"
   },
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "test": "node --inspect --watch test-runner.js"
+    "test": "node --inspect --watch test-runner.js",
+    "start": "npm run test"
   },
   "devDependencies": {
     "promises-aplus-tests": "^2.1.2"
